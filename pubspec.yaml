@@ -40,6 +40,8 @@ dependencies:
   firebase_storage: ^8.0.6
   # google login
   google_sign_in: ^5.0.3
+  # google font
+  google_fonts: ^2.1.0
 
   # icon
   flutter_vector_icons: ^1.0.0

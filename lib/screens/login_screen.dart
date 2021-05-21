@@ -17,6 +17,7 @@ class LoginScreen extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   authController.signInWithGoogle();
+                  print('click');
                 },
                 child: Text('google Login'),
               ),

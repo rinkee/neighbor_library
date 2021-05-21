@@ -7,11 +7,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:neighbor_library/app.dart';
+
 // screen
-// import 'package:neighbor_library/app.dart';
-// import 'package:trytousergetx/screens/create_account_screen.dart';
+import 'package:neighbor_library/app.dart';
 import 'package:neighbor_library/screens/login_screen.dart';
+import 'package:neighbor_library/screens/save_user_in_firestore.dart';
 // controller
 import 'package:neighbor_library/services/controller/user_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
@@ -42,18 +42,18 @@ class AuthController extends GetxController {
       // 로그인 했나 체크 후 정보 MyUser에 저장
       // TODO 유저 전환 후 업데이트가 되지않음 포스트를 올릴때 username이 그대로 저장된다는 문제가 있음
       // 모든 데이터를 firestored에서 가져와서 의미가 없어짐 .
-      usersRef
-          .doc(authController.firebaseUser.uid)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        // if (documentSnapshot.exists) {
-        //   userController.change(
-        //       id: authController.firebaseUser.uid,
-        //       username: documentSnapshot.data()['username']);
-        //
-        //   print('current usermodel update');
-        // }
-      });
+      // usersRef
+      //     .doc(authController.firebaseUser.uid)
+      //     .get()
+      //     .then((DocumentSnapshot documentSnapshot) {
+      //   if (documentSnapshot.exists) {
+      //     userController.change(
+      //         id: authController.firebaseUser.uid,
+      //         username: documentSnapshot.data()['user']);
+      //
+      //     print('current usermodel update');
+      //   }
+      // });
       update();
       return App();
     }
@@ -84,13 +84,13 @@ class AuthController extends GetxController {
       if (!documentSnapshot.exists) {
         update();
         Get.back();
-        // Get.to(CreateAccountScreen());
+        Get.to(SaveUserInFirestoreScreen());
+        // 임시로 데이터가 없어도 app스크린으로 보냄
+        // Get.offAll(App());
         print('user info not in cloud_store');
       } else {
-        userController.change(
-          id: user.uid,
-          // username: documentSnapshot.data()['username']
-        );
+        // userController.change(
+        //     id: user.uid, username: documentSnapshot.data()['username']);
         print('current usermodel update');
         update();
         Get.back();

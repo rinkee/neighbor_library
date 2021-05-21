@@ -4,7 +4,7 @@ enum RouteName {
   HomeScreen,
   UploadScreen,
   BookmarkScreen,
-  MyPageScreen,
+  UserScreen,
 }
 
 class ScreenController extends GetxService {

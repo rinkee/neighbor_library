@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/user_screen.dart';
 
 // screens
 import 'package:neighbor_library/services/controller/screen_controller.dart';
@@ -38,8 +39,8 @@ MyBottomNavigation() {
         case RouteName.BookmarkScreen:
           return HomeScreen();
           break;
-        case RouteName.MyPageScreen:
-          return HomeScreen();
+        case RouteName.UserScreen:
+          return UserScreen();
           break;
       }
       return Container();

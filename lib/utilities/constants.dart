@@ -11,10 +11,11 @@ import 'package:intl/intl.dart';
 
 final _firestore = FirebaseFirestore.instance;
 final storageRef = firebase_storage.FirebaseStorage.instance.ref();
-final firebase_storage.Reference postStorageRef =
-    storageRef.child('Posts Pictures'); // 포스트 사진이 저장되는 폴
+final firebase_storage.Reference bookStorageRef =
+    storageRef.child('Books Pictures'); // 포스트 사진이 저장되는 폴
 final usersRef = _firestore.collection('users');
 final postsRef = _firestore.collection('posts');
+final booksRef = _firestore.collection('books');
 final followRef = _firestore.collection('follow');
 
 // 컨트롤러 인식

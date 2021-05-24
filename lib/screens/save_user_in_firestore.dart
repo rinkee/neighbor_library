@@ -93,5 +93,4 @@ saveUserInfoToFirestore() async {
         .then((value) => print("User Add firestore"))
         .catchError((error) => print("Failed to add user: $error"));
   }
-  userController.change(id: user.uid, username: nameController.text);
 }

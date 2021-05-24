@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/register_book_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
-
-TextEditingController bookTitleController = TextEditingController();
-TextEditingController bookWriterController = TextEditingController();
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -260,67 +258,7 @@ class HomeScreen extends StatelessWidget {
                         }),
                   ],
                 ),
-                ListView(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: TextFormField(
-                              controller: bookTitleController,
-                              decoration: InputDecoration(
-                                labelText: "책 이름",
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              validator: (val) {
-                                if (val.trim().length < 2 || val.isEmpty) {
-                                  return '닉네임이 너무 짧아요. (< 5)';
-                                } else if (val.trim().length > 15 ||
-                                    val.isEmpty) {
-                                  return '닉네임이 너무 길어요. (> 15)';
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: TextFormField(
-                              controller: bookWriterController,
-                              decoration: InputDecoration(
-                                labelText: "저자",
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              validator: (val) {
-                                if (val.trim().length < 2 || val.isEmpty) {
-                                  return '닉네임이 너무 짧아요. (< 5)';
-                                } else if (val.trim().length > 15 ||
-                                    val.isEmpty) {
-                                  return '닉네임이 너무 길어요. (> 15)';
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
-                          ),
-                          RaisedButton(
-                            onPressed: () {
-                              print('click');
-                            },
-                            child: Text('등록하기'),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                RegisterBookScreen()
               ],
             ),
           ),

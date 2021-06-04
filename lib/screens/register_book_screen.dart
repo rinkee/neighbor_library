@@ -101,13 +101,15 @@ class _RegisterBookScreenState extends State<RegisterBookScreen> {
   }) {
     booksRef.doc(bookId).set({
       'bookId': bookId,
-      'uId': authController.firebaseUser.uid,
-      'userPhotoURL': authController.firebaseUser.photoURL,
-      'username': userController.user.value.username,
       'bookImageURL': url,
-      'timestamp': Timestamp.now(),
       'bookTitle': bookTitle,
       'bookWriter': bookWriter,
+      'timestamp': Timestamp.now(),
+      'userInfo': {
+        'uId': authController.firebaseUser.uid,
+        'userPhotoURL': authController.firebaseUser.photoURL,
+        'username': userController.user.value.username,
+      },
       'counts': {
         'likesCount': 0,
         'commentsCount': 0,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/upload_screen.dart';
 import 'package:neighbor_library/screens/user_screen.dart';
 
 // screens
@@ -33,8 +34,9 @@ MyBottomNavigation() {
         case RouteName.HomeScreen:
           return HomeScreen();
           break;
+
         case RouteName.UploadScreen:
-          return HomeScreen();
+          return UploadScreen();
           break;
         case RouteName.BookmarkScreen:
           return HomeScreen();
@@ -67,6 +69,12 @@ MyBottomNavigation() {
                 child: Icon(Feather.compass),
               ),
               label: '라이브'),
+          BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: Icon(Feather.plus_circle),
+              ),
+              label: '추가'),
           BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 3),

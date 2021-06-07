@@ -33,7 +33,8 @@ class HomeScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 1,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.only(
+                        top: 24, left: 24, bottom: 24, right: 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -51,49 +52,73 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.symmetric(vertical: 20.0),
-                                height: 300,
+                                margin: EdgeInsets.symmetric(vertical: 15.0),
+                                height: Get.height / 3.3,
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 160.0,
-                                          color: Colors.red,
-                                          height: 200,
-                                        ),
-                                        Text('여친이 좋아하는 룩'),
-                                        Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                      ],
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            color: Colors.blue,
+                                            height: 200,
+                                          ),
+                                          Text(
+                                            '여친이 좋아하는 룩 오로로로로',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
+                                        ],
+                                      ),
+                                      width: 160,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 160.0,
-                                          color: Colors.red,
-                                          height: 200,
-                                        ),
-                                        Text('여친이 좋아하는 룩'),
-                                        Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                      ],
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            color: Colors.red,
+                                            height: 200,
+                                          ),
+                                          Text(
+                                            '여친이 좋아하는 룩',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
+                                        ],
+                                      ),
+                                      width: 160,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 160.0,
-                                          color: Colors.red,
-                                          height: 200,
-                                        ),
-                                        Text('여친이 좋아하는 룩'),
-                                        Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                      ],
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            color: Colors.green,
+                                            height: 200,
+                                          ),
+                                          Text(
+                                            '여친이 좋아하는 룩',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
+                                        ],
+                                      ),
+                                      width: 160,
                                     ),
                                   ],
                                 ),
@@ -117,26 +142,40 @@ class HomeScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              Image(
+                                image: AssetImage('assets/icons/006-cap.png'),
+                              ),
+                              Image.asset('assets/icons/006-cap.png'),
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 20.0),
-                                height: 200,
+                                height: 85,
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
                                     Container(
-                                      width: 160.0,
+                                      margin: EdgeInsets.only(right: 10),
+                                      width: 85.0,
                                       color: Colors.red,
-                                      height: 200,
+                                      child: Column(
+                                        children: [
+                                          Image(
+                                            image: AssetImage(
+                                                'assets/icons/006-cap.png'),
+                                          ),
+                                          Image.asset(
+                                              'assets/icons/006-cap.png'),
+                                          Text('hat'),
+                                          Text('hat'),
+                                        ],
+                                      ),
                                     ),
                                     Container(
-                                      width: 160.0,
+                                      width: 85.0,
                                       color: Colors.blue,
-                                      height: 200,
                                     ),
                                     Container(
-                                      width: 160.0,
+                                      width: 85.0,
                                       color: Colors.green,
-                                      height: 200,
                                     ),
                                   ],
                                 ),

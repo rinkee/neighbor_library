@@ -92,5 +92,13 @@ saveUserInfoToFirestore() async {
         })
         .then((value) => print("User Add firestore"))
         .catchError((error) => print("Failed to add user: $error"));
+
+    itemsRef
+        .doc(user.uid)
+        .set({
+          'Hat': 0,
+        })
+        .then((value) => print("items Add firestore"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 }

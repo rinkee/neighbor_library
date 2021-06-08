@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 enum RouteName {
   HomeScreen,
   UploadScreen,
+  RegisterStyleScreen,
   BookmarkScreen,
   UserScreen,
 }

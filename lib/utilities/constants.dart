@@ -15,7 +15,8 @@ final firebase_storage.Reference bookStorageRef =
     storageRef.child('Books Pictures'); // 포스트 사진이 저장되는 폴
 final usersRef = _firestore.collection('users');
 final postsRef = _firestore.collection('posts');
-final booksRef = _firestore.collection('books');
+final itemsRef = _firestore.collection('items');
+// final booksRef = _firestore.collection('books');
 final followRef = _firestore.collection('follow');
 
 // 컨트롤러 인식

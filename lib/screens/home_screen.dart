@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neighbor_library/screens/register_book_screen.dart';
+import 'package:neighbor_library/screens/item_screen.dart';
+import 'package:neighbor_library/screens/register_Style_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 
@@ -135,17 +136,28 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '아이템',
-                                style: TextStyle(
-                                  fontSize: Get.width / 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '아이템',
+                                    style: TextStyle(
+                                      fontSize: Get.width / 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Get.to(ItemScreen());
+                                      },
+                                      child: Text('더보기'),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Image(
-                                image: AssetImage('assets/icons/006-cap.png'),
-                              ),
-                              Image.asset('assets/icons/006-cap.png'),
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 20.0),
                                 height: 85,
@@ -158,13 +170,10 @@ class HomeScreen extends StatelessWidget {
                                       color: Colors.red,
                                       child: Column(
                                         children: [
-                                          Image(
-                                            image: AssetImage(
-                                                'assets/icons/006-cap.png'),
-                                          ),
                                           Image.asset(
-                                              'assets/icons/006-cap.png'),
-                                          Text('hat'),
+                                            'assets/icons/006-cap.png',
+                                            width: 50,
+                                          ),
                                           Text('hat'),
                                         ],
                                       ),

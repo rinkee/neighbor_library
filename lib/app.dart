@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/register_Style_screen.dart';
 import 'package:neighbor_library/screens/upload_screen.dart';
 import 'package:neighbor_library/screens/user_screen.dart';
 
@@ -36,7 +37,10 @@ MyBottomNavigation() {
           break;
 
         case RouteName.UploadScreen:
-          return UploadScreen();
+          return MyPostScreen();
+          break;
+        case RouteName.RegisterStyleScreen:
+          return RegisterStyleScreen();
           break;
         case RouteName.BookmarkScreen:
           return HomeScreen();

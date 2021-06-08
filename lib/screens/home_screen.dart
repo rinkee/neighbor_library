@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 15.0),
-                                height: Get.height / 3.3,
+                                height: Get.height / 3,
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                                         children: [
                                           Container(
                                             color: Colors.blue,
-                                            height: 200,
+                                            height: Get.height / 4,
                                           ),
                                           Text(
                                             '여친이 좋아하는 룩 오로로로로',

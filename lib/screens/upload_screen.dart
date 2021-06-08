@@ -28,7 +28,7 @@ class MyPostScreen extends StatelessWidget {
 
             return new GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: Get.height * 0.0007),
+                  crossAxisCount: 2, childAspectRatio: 0.55),
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) => Container(
                 // decoration:
@@ -38,8 +38,8 @@ class MyPostScreen extends StatelessWidget {
                   children: [
                     Image.network(
                       snapshot.data.docs[index]['postImageURL'],
-                      width: Get.width,
-                      height: Get.width * 0.6,
+                      width: Get.width * 2,
+                      height: Get.height * 0.35,
                       fit: BoxFit.cover,
                     ),
                     Text(

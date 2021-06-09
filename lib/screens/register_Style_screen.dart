@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 
 // for upload
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as ImD;
 import 'package:path_provider/path_provider.dart';
 
@@ -20,6 +22,7 @@ class RegisterStyleScreen extends StatefulWidget {
 
 class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
   TextEditingController postTitleController = TextEditingController();
+  TextEditingController postController = TextEditingController();
   String postId = Uuid().v4();
   final ImagePicker _picker = ImagePicker();
   File imgFile;
@@ -38,6 +41,7 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
         Padding(
           padding: EdgeInsets.all(24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               imgFile == null
                   ? Text('No Image')
@@ -46,8 +50,18 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                 onPressed: _getImage,
                 child: Text('이미지'),
               ),
+
+              /// Select Color
+              Text(
+                '컬러',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF888888),
+                ),
+              ),
               Container(
-                padding: EdgeInsets.only(top: 10, bottom: 20),
+                padding: EdgeInsets.only(top: 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,34 +88,42 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                 ),
               ),
               // Text(_ColorValue),
+              /// 제목
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Text(
+                  '제목',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF888888),
+                  ),
+                ),
+              ),
               TextField(
                 controller: postTitleController,
               ),
-              // Padding(
-              //   padding: EdgeInsets.all(20),
-              //   child: TextFormField(
-              //     controller: bookWriterController,
-              //     decoration: InputDecoration(
-              //       labelText: "저자",
-              //       enabledBorder: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(10.0),
-              //       ),
-              //     ),
-              //     validator: (val) {
-              //       if (val.trim().length < 2 || val.isEmpty) {
-              //         return '닉네임이 너무 짧아요. (< 5)';
-              //       } else if (val.trim().length > 15 || val.isEmpty) {
-              //         return '닉네임이 너무 길어요. (> 15)';
-              //       } else {
-              //         return null;
-              //       }
-              //     },
-              //   ),
-              // ),
+
+              /// 설명
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Text(
+                  '설명',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF888888),
+                  ),
+                ),
+              ),
+              TextField(
+                controller: postTitleController,
+              ),
+
               RaisedButton(
                 onPressed: () {
                   controlUploadAndSave();
-                  print('click');
+                  print('upload post');
                 },
                 child: Text('등록하기'),
               ),
@@ -133,11 +155,26 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
     });
   }
 
+  /// Get from gallery
   Future _getImage() async {
     PickedFile image = await _picker.getImage(source: ImageSource.gallery);
     setState(() {
       this.imgFile = File(image.path);
     });
+    _cropImage(image.path);
+  }
+
+  /// Crop Image
+  _cropImage(filePath) async {
+    File croppedImage = await ImageCropper.cropImage(
+      sourcePath: filePath,
+      maxWidth: 1080,
+      maxHeight: 1080,
+    );
+    if (croppedImage != null) {
+      imgFile = croppedImage;
+      setState(() {});
+    }
   }
 
   Future<String> uploadPhoto(mImgFile) async {

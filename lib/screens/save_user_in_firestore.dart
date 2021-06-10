@@ -81,7 +81,6 @@ saveUserInfoToFirestore() async {
         .set({
           'bio': '',
           'email': user.email,
-          'rentCount': 0,
           // 'followerCount': 0,
           'uId': user.uid,
           'postCount': 0,
@@ -89,6 +88,8 @@ saveUserInfoToFirestore() async {
           'timestamp': Timestamp.now(),
           'photoURL': user.photoURL,
           'username': nameController.text,
+          'lastUpdateDailyLook': Timestamp.now(),
+          'lastUpdateBuyCloth': Timestamp.now(),
         })
         .then((value) => print("User Add firestore"))
         .catchError((error) => print("Failed to add user: $error"));

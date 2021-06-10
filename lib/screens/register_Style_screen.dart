@@ -14,6 +14,7 @@ import 'package:image/image.dart' as ImD;
 import 'package:path_provider/path_provider.dart';
 
 String _ColorValue;
+Color choiceColorBorber = Colors.red;
 
 class RegisterStyleScreen extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class RegisterStyleScreen extends StatefulWidget {
 
 class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
   TextEditingController postTitleController = TextEditingController();
-  TextEditingController postController = TextEditingController();
+  TextEditingController postDescriptionController = TextEditingController();
   String postId = Uuid().v4();
   final ImagePicker _picker = ImagePicker();
   File imgFile;
@@ -36,101 +37,165 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              imgFile == null
-                  ? Text('No Image')
-                  : Image.file(File(imgFile.path)),
-              RaisedButton(
-                onPressed: _getImage,
-                child: Text('이미지'),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          '코디 등록',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 24, right: 24, bottom: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                imgFile == null
+                    ? Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: choiceColorBorber, width: 5),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('no image'),
+                              RaisedButton(
+                                onPressed: _getImage,
+                                child: Text('이미지'),
+                              ),
+                            ],
+                          ),
+                        ))
+                    : Container(
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: choiceColorBorber, width: 7),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(7),
+                          child: Image.file(
+                            File(imgFile.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
 
-              /// Select Color
-              Text(
-                '컬러',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF888888),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    changeColorValue(
-                        value: 'red', number: 1, Colour: Colors.red),
-                    changeColorValue(
-                        value: 'orange', number: 5, Colour: Colors.orange),
-                    changeColorValue(
-                        value: 'yellow', number: 2, Colour: Colors.yellow),
-                    changeColorValue(
-                        value: 'green', number: 3, Colour: Colors.green),
-                    changeColorValue(
-                        value: 'blue', number: 4, Colour: Colors.blue),
-                    changeColorValue(
-                        value: 'purple', number: 5, Colour: Colors.purple),
-                    changeColorValue(
-                        value: 'white', number: 5, Colour: Colors.white),
-                    changeColorValue(
-                        value: 'grey', number: 5, Colour: Colors.grey),
-                    changeColorValue(
-                        value: 'black', number: 5, Colour: Colors.black),
-                  ],
-                ),
-              ),
-              // Text(_ColorValue),
-              /// 제목
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Text(
-                  '제목',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF888888),
+                /// Select Color
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    '컬러',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF888888),
+                    ),
                   ),
                 ),
-              ),
-              TextField(
-                controller: postTitleController,
-              ),
-
-              /// 설명
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Text(
-                  '설명',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF888888),
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      changeColorValue(
+                          value: 'red', number: 1, choiceColor: Colors.red),
+                      changeColorValue(
+                          value: 'orange',
+                          number: 5,
+                          choiceColor: Colors.orange),
+                      changeColorValue(
+                          value: 'yellow',
+                          number: 2,
+                          choiceColor: Colors.yellow),
+                      changeColorValue(
+                          value: 'green', number: 3, choiceColor: Colors.green),
+                      changeColorValue(
+                          value: 'blue', number: 4, choiceColor: Colors.blue),
+                      changeColorValue(
+                          value: 'purple',
+                          number: 5,
+                          choiceColor: Colors.purple),
+                      changeColorValue(
+                          value: 'white', number: 5, choiceColor: Colors.white),
+                      changeColorValue(
+                          value: 'grey', number: 5, choiceColor: Colors.grey),
+                      changeColorValue(
+                          value: 'black', number: 5, choiceColor: Colors.black),
+                    ],
                   ),
                 ),
-              ),
-              TextField(
-                controller: postTitleController,
-              ),
+                // Text(_ColorValue),
+                /// 제목
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    '제목',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF888888),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: postTitleController,
+                ),
 
-              RaisedButton(
-                onPressed: () {
-                  controlUploadAndSave();
-                  print('upload post');
-                },
-                child: Text('등록하기'),
-              ),
-            ],
-          ),
-        )
-      ],
+                /// 설명
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    '설명',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF888888),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: postDescriptionController,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: ButtonTheme(
+                      minWidth: Get.width,
+                      height: 56,
+                      child: RaisedButton(
+                        onPressed: () {
+                          controlUploadAndSave();
+                          print('upload post');
+                        },
+                        child: Text(
+                          '등록하기',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -215,24 +280,26 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
       url: downloadUrl,
       postTitle: postTitleController.text,
     ); // location은 에러나서 잠시 보류
-    // usersRef
-    //     .doc(currentUser.uid)
-    //     .update({'postCount': FieldValue.increment(1)});
+    usersRef
+        .doc(authController.firebaseUser.uid)
+        .update({'postCount': FieldValue.increment(1)});
     clearPostInfo();
   }
 
-  GestureDetector changeColorValue({String value, int number, Color Colour}) {
+  GestureDetector changeColorValue(
+      {String value, int number, Color choiceColor}) {
     return GestureDetector(
       onTap: () => setState(() {
         _ColorValue = value;
         // _servicePlaceOpacity = 1.0;
+        choiceColorBorber = choiceColor;
         print(_ColorValue);
       }),
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: new BorderRadius.all(Radius.circular(100)),
-          color: Colour,
+          color: choiceColor,
         ),
         height: 30,
         width: 30,

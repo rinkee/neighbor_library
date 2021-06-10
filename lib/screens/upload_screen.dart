@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neighbor_library/screens/crop_page.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 
@@ -18,7 +17,7 @@ class MyPostScreen extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                Get.to(CropPage());
+                // Get.to(CropPage());
               })
         ],
         backgroundColor: Colors.white,

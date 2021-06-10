@@ -5,6 +5,7 @@ import 'package:neighbor_library/screens/item_screen.dart';
 import 'package:neighbor_library/screens/register_Style_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -34,101 +35,87 @@ class HomeScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 1,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(
-                        top: 24, left: 24, bottom: 24, right: 0),
+                    padding:
+                        const EdgeInsets.only(top: 24, bottom: 24, right: 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 6월의 룩
-                        Padding(
-                          padding: EdgeInsets.only(top: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24),
+                              child: Text(
                                 '6월의 룩',
                                 style: TextStyle(
                                   fontSize: Get.width / 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 15.0),
-                                height: Get.height / 3,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 15.0),
+                              height: Get.height / 2.5,
+                              child: FutureBuilder<QuerySnapshot>(
+                                  future: postsRef
+                                      .where('userInfo.uId',
+                                          isEqualTo:
+                                              authController.firebaseUser.uid)
+                                      .get(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return circularProgress();
+                                    }
+
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data.docs.length,
+                                      itemBuilder: (context, index) =>
                                           Container(
-                                            color: Colors.blue,
-                                            height: Get.height / 4,
-                                          ),
-                                          Text(
-                                            '여친이 좋아하는 룩 오로로로로',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                        ],
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Image.network(
+                                              snapshot.data.docs[index]
+                                                  ['postImageURL'],
+                                              width: Get.width,
+                                              height: Get.height / 3.5,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              snapshot
+                                                  .data.docs[index]['postTitle']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              snapshot
+                                                  .data.docs[index]['postTitle']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xFF222222),
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                        width: 160,
                                       ),
-                                      width: 160,
-                                    ),
-                                    Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            color: Colors.red,
-                                            height: 200,
-                                          ),
-                                          Text(
-                                            '여친이 좋아하는 룩',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                        ],
-                                      ),
-                                      width: 160,
-                                    ),
-                                    Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            color: Colors.green,
-                                            height: 200,
-                                          ),
-                                          Text(
-                                            '여친이 좋아하는 룩',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text('여친이 좋아하는 룩입니다 오로로로로'),
-                                        ],
-                                      ),
-                                      width: 160,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(
-                                height: 0,
-                              ),
-                            ],
-                          ),
+                                    );
+                                  }),
+                            ),
+                            Divider(
+                              height: 0,
+                            ),
+                          ],
                         ),
                         // 아이템
                         Padding(
@@ -151,7 +138,9 @@ class HomeScreen extends StatelessWidget {
                                     padding: const EdgeInsets.only(right: 20),
                                     child: InkWell(
                                       onTap: () {
-                                        Get.to(ItemScreen());
+                                        // Get.to(ItemScreen());
+                                        print(snapshot
+                                            .data['lastUpdateDailyLook']);
                                       },
                                       child: Text('더보기'),
                                     ),
@@ -215,8 +204,11 @@ class HomeScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       Container(
-                                        child:
-                                            Center(child: Text('21년 4월 20일')),
+                                        child: Center(
+                                            child: Text(formatter.format(
+                                                snapshot
+                                                    .data['lastUpdateDailyLook']
+                                                    .toDate()))),
                                         width: Get.width / 2.5,
                                         height: Get.width / 2.5,
                                         decoration: BoxDecoration(
@@ -230,8 +222,11 @@ class HomeScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       Container(
-                                        child:
-                                            Center(child: Text('21년 4월 20일')),
+                                        child: Center(
+                                            child: Text(formatter.format(
+                                                snapshot
+                                                    .data['lastUpdateBuyCloth']
+                                                    .toDate()))),
                                         width: Get.width / 2.5,
                                         height: Get.width / 2.5,
                                         decoration: BoxDecoration(

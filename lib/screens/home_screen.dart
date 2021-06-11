@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                                     padding: const EdgeInsets.only(right: 20),
                                     child: InkWell(
                                       onTap: () {
-                                        // Get.to(ItemScreen());
+                                        Get.to(ItemScreen());
                                         print(snapshot
                                             .data['lastUpdateDailyLook']);
                                       },

@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+final url = firebase_storage.FirebaseStorage.instance
+    .refFromURL('gs://neighbor-library-a01d4.appspot.com/icons/cap.png')
+    .child(path);
 
 class ItemScreen extends StatelessWidget {
   @override
@@ -16,46 +21,46 @@ class ItemScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-          stream: itemsRef.doc(authController.firebaseUser.uid).snapshots(),
+      body: FutureBuilder<QuerySnapshot>(
+          future: usersRef
+              .doc(authController.firebaseUser.uid)
+              .collection('items')
+              .get(),
           builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return circularProgress();
             }
 
-            return new GridView.builder(
+            return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: Get.height * 0.0007),
-              itemCount: 2,
-              itemBuilder: (context, index) => Container(
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.red)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Image.network(
-                    //   snapshot.data.docs[index]['postImageURL'],
-                    //   width: Get.width,
-                    //   height: Get.width * 0.6,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    Text(
-                      snapshot.data['Hat'].toString(),
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    Text(
-                      snapshot.data['Top'].toString(),
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
+                  crossAxisCount: 3, childAspectRatio: 0.55),
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) => new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image.network(
+                  //   snapshot.data.docs[index]['postImageURL'],
+                  //   width: Get.width,
+                  //   height: Get.width * 0.6,
+                  //   fit: BoxFit.cover,
+                  // ),
+                  Image.network(),
+                  Text(
+                    snapshot.data.docs[index]['name'].toString(),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  Text(
+                    snapshot.data.docs[index]['count'].toString(),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ],
               ),
             );
           }),

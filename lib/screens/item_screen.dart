@@ -36,10 +36,12 @@ class _ItemScreenState extends State<ItemScreen> {
 
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, childAspectRatio: 0.55),
+                  crossAxisCount: 3, childAspectRatio: 1 / 1),
               itemCount: snapshot.data.docs.length,
-              itemBuilder: (context, index) =>
-                  new ItemsView(queryDS: snapshot.data.docs[index]),
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: new ItemsView(queryDS: snapshot.data.docs[index]),
+              ),
             );
           }),
     );

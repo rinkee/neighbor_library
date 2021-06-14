@@ -160,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           Image.asset(
-                                            'assets/icons/006-cap.png',
+                                            'assets/icons/cap.png',
                                             width: 50,
                                           ),
                                           Text('hat'),

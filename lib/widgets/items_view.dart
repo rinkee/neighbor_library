@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:get/get.dart';
 
 class ItemsView extends StatefulWidget {
   QueryDocumentSnapshot queryDS;
@@ -11,43 +12,42 @@ class ItemsView extends StatefulWidget {
 }
 
 class _ItemsViewState extends State<ItemsView> {
-  String iconURL;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _getIconURL().then((value) => print(iconURL));
-  }
-
-  Future<void> _getIconURL() async {
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('icons/${widget.queryDS['name']}.png')
-        .getDownloadURL();
-    setState(() {
-      iconURL = downloadURL;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          // Image.network(
-          //   _getImage().toString(),
-          //   height: 100,
-          //   fit: BoxFit.cover,
-          // ),
-          Image.network(iconURL),
-          Text(
-            widget.queryDS['name'].toString(),
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+    return Stack(
+      children: [
+        Container(
+          alignment: Alignment(0, 0),
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+        ),
+        Positioned(
+          width: 120,
+          top: -20,
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image:
+                      AssetImage('assets/icons/${widget.queryDS['name']}.png'),
+                  fit: BoxFit.cover,
+                ),
+                Text(widget.queryDS['count'].toString()),
+                Text(
+                  widget.queryDS['name'].toString(),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }

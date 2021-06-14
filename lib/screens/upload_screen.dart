@@ -52,7 +52,7 @@ class MyPostScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8, left: 3),
+                        padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           snapshot.data.docs[index]['postTitle'].toString(),
                           style: TextStyle(
@@ -62,7 +62,7 @@ class MyPostScreen extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 3),
+                        padding: const EdgeInsets.only(left: 0),
                         child: Text(
                           snapshot.data.docs[index]['postTitle'].toString(),
                           style:

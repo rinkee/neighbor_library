@@ -41,85 +41,150 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 6월의 룩
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Text(
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 '6월의 룩',
                                 style: TextStyle(
                                   fontSize: Get.width / 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 15.0),
-                              height: Get.height / 2.5,
-                              child: FutureBuilder<QuerySnapshot>(
-                                  future: postsRef
-                                      .where('userInfo.uId',
-                                          isEqualTo:
-                                              authController.firebaseUser.uid)
-                                      .get(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return circularProgress();
-                                    }
+                              snapshot.data['postCount'] != 0
+                                  ? Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 15.0),
+                                      height: Get.height / 2.5,
+                                      child: FutureBuilder<QuerySnapshot>(
+                                          future: postsRef
+                                              .where('userInfo.uId',
+                                                  isEqualTo: authController
+                                                      .firebaseUser.uid)
+                                              .get(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return circularProgress();
+                                            }
 
-                                    return ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: snapshot.data.docs.length,
-                                      itemBuilder: (context, index) =>
-                                          Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.network(
-                                              snapshot.data.docs[index]
-                                                  ['postImageURL'],
-                                              width: Get.width,
-                                              height: Get.height / 3.5,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            Text(
-                                              snapshot
-                                                  .data.docs[index]['postTitle']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Text(
-                                              snapshot
-                                                  .data.docs[index]['postTitle']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Color(0xFF222222),
+                                            return ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount:
+                                                  snapshot.data.docs.length,
+                                              itemBuilder: (context, index) =>
+                                                  Container(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Image.network(
+                                                      snapshot.data.docs[index]
+                                                          ['postImageURL'],
+                                                      width: Get.width,
+                                                      height: Get.height / 3.5,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Text(
+                                                      snapshot
+                                                          .data
+                                                          .docs[index]
+                                                              ['postTitle']
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      snapshot
+                                                          .data
+                                                          .docs[index]
+                                                              ['postTitle']
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            Color(0xFF222222),
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                                width: 160,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
+                                            );
+                                          }),
+                                    )
+                                  : Container(
+                                      height: Get.height / 5,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '아직 기록한 룩이 없으시군요...!',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey,
                                             ),
-                                          ],
-                                        ),
-                                        width: 160,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 20,
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 20),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: ButtonTheme(
+                                                minWidth: Get.width,
+                                                buttonColor: Colors.blue[500],
+                                                height: 56,
+                                                child: RaisedButton(
+                                                  onPressed: () {
+                                                    Get.to(
+                                                        RegisterStyleScreen());
+                                                  },
+                                                  child: Text(
+                                                    '나의 룩 등록해 보기',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  }),
+                                    ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                          child: new Center(
+                            child: new Container(
+                              height: 10.0,
+                              color: Colors.grey[100],
                             ),
-                            Divider(
-                              height: 0,
-                            ),
-                          ],
+                          ),
                         ),
                         // 아이템
                         Padding(
-                          padding: EdgeInsets.only(top: 30),
+                          padding: EdgeInsets.only(top: 30, bottom: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -127,11 +192,14 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    '아이템',
-                                    style: TextStyle(
-                                      fontSize: Get.width / 16,
-                                      fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 24),
+                                    child: Text(
+                                      '아이템',
+                                      style: TextStyle(
+                                        fontSize: Get.width / 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -147,41 +215,92 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 20.0),
-                                height: 85,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      width: 85.0,
-                                      color: Colors.red,
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons/cap.png',
-                                            width: 50,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Container(
+                                  width: Get.width,
+                                  height: 100,
+                                  margin: EdgeInsets.only(top: 13),
+                                  child: FutureBuilder<QuerySnapshot>(
+                                      future: usersRef
+                                          .doc(authController.firebaseUser.uid)
+                                          .collection('items')
+                                          .get(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return circularProgress();
+                                        }
+
+                                        return ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: snapshot.data.docs.length,
+                                          itemBuilder: (context, index) =>
+                                              Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 7, left: 7),
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  top: 10, bottom: 10),
+                                              width: 100,
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFF2F1E9),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Image(
+                                                    image: AssetImage(
+                                                        'assets/icons/${snapshot.data.docs[index]['name']}.png'),
+                                                    width: 50,
+                                                  ),
+                                                  Text(
+                                                    snapshot.data
+                                                        .docs[index]['count']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xff4D4D4D),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data.docs[index]
+                                                        ['name'],
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xFF4D4D4D),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          Text('hat'),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 85.0,
-                                      color: Colors.blue,
-                                    ),
-                                    Container(
-                                      width: 85.0,
-                                      color: Colors.green,
-                                    ),
-                                  ],
+                                        );
+                                      }),
                                 ),
                               ),
-                              Divider(
-                                height: 0,
-                              ),
                             ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                          child: new Center(
+                            child: new Container(
+                              height: 10.0,
+                              color: Colors.grey[100],
+                            ),
                           ),
                         ),
                         // 최근기록

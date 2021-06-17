@@ -177,7 +177,7 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                       child: RaisedButton(
                         onPressed: () {
                           controlUploadAndSave();
-                          print('upload post');
+                          print('update post');
                         },
                         child: Text(
                           '등록하기',
@@ -280,9 +280,37 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
       url: downloadUrl,
       postTitle: postTitleController.text,
     ); // location은 에러나서 잠시 보류
-    usersRef
+    usersRef.doc(authController.firebaseUser.uid).update({
+      'postCount': FieldValue.increment(1),
+      'lastUpdateDailyLook': Timestamp.now(),
+    });
+    DocumentSnapshot documentSnapshot = await usersRef
         .doc(authController.firebaseUser.uid)
-        .update({'postCount': FieldValue.increment(1)});
+        .collection('colors')
+        .doc(_ColorValue)
+        .get();
+
+    /// 만약 기존 값이 없다면 doc을 새로 생성후 값을 추가
+    if (!documentSnapshot.exists)
+      usersRef
+          .doc(authController.firebaseUser.uid)
+          .collection('colors')
+          .doc(_ColorValue)
+          .set(
+        {
+          'count': FieldValue.increment(1),
+          'name': _ColorValue,
+        },
+      );
+
+    /// 기존 값이 있다면 count만 증가
+    else {
+      usersRef
+          .doc(authController.firebaseUser.uid)
+          .collection('colors')
+          .doc(_ColorValue)
+          .update({'count': FieldValue.increment(1)});
+    }
     clearPostInfo();
   }
 

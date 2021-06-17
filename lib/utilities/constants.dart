@@ -28,7 +28,7 @@ final userController = Get.put(UserController());
 final currentUserName = userController.user.value.username;
 
 // time
-final DateFormat formatter = DateFormat('yyyy년 MM월 dd일');
+final DateFormat formatter = DateFormat('yy년 MM월 dd일');
 
 // size //
 const double kEmojiContainerSize = 65;

@@ -14,14 +14,15 @@ import 'package:image/image.dart' as ImD;
 import 'package:path_provider/path_provider.dart';
 
 String _ColorValue;
-Color choiceColorBorber = Colors.red;
+Color myChoiceColor = null; // 유저가 선택한 컬러
+int _ChoiceNumber = null; // db로 넘어가는 헥사코드 컬러값
 
-class RegisterStyleScreen extends StatefulWidget {
+class UploadMystyleScreen extends StatefulWidget {
   @override
-  _RegisterStyleScreenState createState() => _RegisterStyleScreenState();
+  _UploadMystyleScreenState createState() => _UploadMystyleScreenState();
 }
 
-class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
+class _UploadMystyleScreenState extends State<UploadMystyleScreen> {
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
   String postId = Uuid().v4();
@@ -57,8 +58,11 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                     ? Container(
                         height: 300,
                         decoration: BoxDecoration(
-                            border:
-                                Border.all(color: choiceColorBorber, width: 5),
+                            border: Border.all(
+                                color: myChoiceColor == null
+                                    ? Colors.black
+                                    : myChoiceColor,
+                                width: 5),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: Center(
@@ -76,8 +80,7 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                     : Container(
                         width: Get.width,
                         decoration: BoxDecoration(
-                          border:
-                              Border.all(color: choiceColorBorber, width: 7),
+                          border: Border.all(color: Colors.black54, width: 7),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: ClipRRect(
@@ -97,7 +100,9 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF888888),
+                      color: myChoiceColor == null
+                          ? Color(0xFF888888)
+                          : myChoiceColor,
                     ),
                   ),
                 ),
@@ -108,29 +113,41 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       changeColorValue(
-                          value: 'red', number: 1, choiceColor: Colors.red),
+                          value: 'red',
+                          number: 0xFFF44336,
+                          choiceColor: Colors.red),
                       changeColorValue(
                           value: 'orange',
-                          number: 5,
+                          number: 0xFF9800,
                           choiceColor: Colors.orange),
                       changeColorValue(
                           value: 'yellow',
-                          number: 2,
+                          number: 0xFFEB3B,
                           choiceColor: Colors.yellow),
                       changeColorValue(
-                          value: 'green', number: 3, choiceColor: Colors.green),
+                          value: 'green',
+                          number: 0xFF4CAF50,
+                          choiceColor: Colors.green),
                       changeColorValue(
-                          value: 'blue', number: 4, choiceColor: Colors.blue),
+                          value: 'blue',
+                          number: 0xFF2196F3,
+                          choiceColor: Colors.blue),
                       changeColorValue(
                           value: 'purple',
-                          number: 5,
+                          number: 0xFF9C27B0,
                           choiceColor: Colors.purple),
                       changeColorValue(
-                          value: 'white', number: 5, choiceColor: Colors.white),
+                          value: 'white',
+                          number: 0xFFFFFFFF,
+                          choiceColor: Colors.white),
                       changeColorValue(
-                          value: 'grey', number: 5, choiceColor: Colors.grey),
+                          value: 'grey',
+                          number: 0xFF9E9E9E,
+                          choiceColor: Colors.grey),
                       changeColorValue(
-                          value: 'black', number: 5, choiceColor: Colors.black),
+                          value: 'black',
+                          number: 0xFF000000,
+                          choiceColor: Colors.black),
                     ],
                   ),
                 ),
@@ -155,7 +172,7 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Text(
-                    '설명',
+                    '메모',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -268,8 +285,10 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
   clearPostInfo() {
     postId = Uuid().v4();
     postTitleController.clear();
+    postDescriptionController.clear();
     setState(() {
       imgFile = null;
+      myChoiceColor = null;
     });
   }
 
@@ -300,6 +319,7 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
         {
           'count': FieldValue.increment(1),
           'name': _ColorValue,
+          'color': _ChoiceNumber,
         },
       );
 
@@ -320,7 +340,8 @@ class _RegisterStyleScreenState extends State<RegisterStyleScreen> {
       onTap: () => setState(() {
         _ColorValue = value;
         // _servicePlaceOpacity = 1.0;
-        choiceColorBorber = choiceColor;
+        myChoiceColor = choiceColor;
+        _ChoiceNumber = number;
         print(_ColorValue);
       }),
       child: Container(

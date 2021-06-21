@@ -59,7 +59,10 @@ class _ItemScreenState extends State<ItemScreen> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(left: 0, right: 0),
-                  child: new ItemsView(queryDS: snapshot.data.docs[index]),
+                  child: new ItemsView(
+                    queryDS: snapshot.data.docs[index],
+                    accessDetail: false,
+                  ),
                 ),
               );
             }),

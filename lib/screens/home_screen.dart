@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/detail_my_look_screen.dart';
+import 'package:neighbor_library/screens/detail_view_item_screen.dart';
 import 'package:neighbor_library/screens/item_screen.dart';
-import 'package:neighbor_library/screens/register_Style_screen.dart';
+import 'package:neighbor_library/screens/upload_mystyle_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              snapshot.data['postCount'] != 0
+                              snapshot.data['postCount'] >= 1
                                   ? Container(
                                       margin:
                                           EdgeInsets.symmetric(vertical: 15.0),
@@ -74,51 +76,65 @@ class HomeScreen extends StatelessWidget {
 
                                             return ListView.builder(
                                               scrollDirection: Axis.horizontal,
-                                              itemCount:
-                                                  snapshot.data.docs.length,
+                                              itemCount: 5,
                                               itemBuilder: (context, index) =>
-                                                  Container(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Image.network(
-                                                      snapshot.data.docs[index]
-                                                          ['postImageURL'],
-                                                      width: Get.width,
-                                                      height: Get.height / 3.5,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    Text(
-                                                      snapshot
-                                                          .data
-                                                          .docs[index]
-                                                              ['postTitle']
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 18),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      snapshot
-                                                          .data
-                                                          .docs[index]
-                                                              ['postTitle']
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF222222),
+                                                  GestureDetector(
+                                                onTap: () {
+                                                  Get.to(DetailMyLookScreen(),
+                                                      arguments: {
+                                                        'title': snapshot
+                                                            .data
+                                                            .docs[index]
+                                                                ['postTitle']
+                                                            .toString()
+                                                      });
+                                                },
+                                                child: Container(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Image.network(
+                                                        snapshot.data
+                                                                .docs[index]
+                                                            ['postImageURL'],
+                                                        width: Get.width,
+                                                        height:
+                                                            Get.height / 3.5,
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
+                                                      Text(
+                                                        snapshot
+                                                            .data
+                                                            .docs[index]
+                                                                ['postTitle']
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      Text(
+                                                        snapshot
+                                                            .data
+                                                            .docs[index]
+                                                                ['postTitle']
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              Color(0xFF222222),
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  width: 160,
                                                 ),
-                                                width: 160,
                                               ),
                                             );
                                           }),
@@ -152,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                                                 child: RaisedButton(
                                                   onPressed: () {
                                                     Get.to(
-                                                        RegisterStyleScreen());
+                                                        UploadMystyleScreen());
                                                   },
                                                   child: Text(
                                                     '나의 룩 등록해 보기',
@@ -182,7 +198,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // 아이템
+
+                        /// 아이템
                         Padding(
                           padding: EdgeInsets.only(top: 30, bottom: 30),
                           child: Column(
@@ -241,49 +258,75 @@ class HomeScreen extends StatelessWidget {
                                               Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 7, left: 7),
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: 10, bottom: 10),
-                                              width: 100,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFF2F1E9),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(20),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Get.to(
+                                                  DetailViewItemScreen(),
+                                                  arguments: {
+                                                    "snapshotIndex": snapshot
+                                                        .data.docs[index],
+                                                  },
+                                                );
+                                                Get.toNamed(
+                                                    'DetailViewItemScreen()/value');
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    top: 10, bottom: 10),
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFFF2F1E9),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(20),
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.3),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 2,
+                                                      offset: Offset(10,
+                                                          10), // changes position of shadow
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Image(
-                                                    image: AssetImage(
-                                                        'assets/icons/${snapshot.data.docs[index]['name']}.png'),
-                                                    width: 50,
-                                                  ),
-                                                  Text(
-                                                    snapshot.data
-                                                        .docs[index]['count']
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xff4D4D4D),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Image(
+                                                      image: AssetImage(
+                                                          'assets/icons/${snapshot.data.docs[index]['name']}.png'),
+                                                      width: 50,
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    snapshot.data.docs[index]
-                                                        ['name'],
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xFF4D4D4D),
+                                                    Text(
+                                                      snapshot.data
+                                                          .docs[index]['count']
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Color(0xff4D4D4D),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Text(
+                                                      snapshot.data.docs[index]
+                                                          ['name'],
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Color(0xFF4D4D4D),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -409,7 +452,7 @@ class HomeScreen extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 24),
                                     child: Text(
-                                      '아이템',
+                                      '선호 컬러',
                                       style: TextStyle(
                                         fontSize: Get.width / 16,
                                         fontWeight: FontWeight.bold,
@@ -429,80 +472,104 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Container(
-                                  width: Get.width,
-                                  height: 100,
-                                  margin: EdgeInsets.only(top: 13),
-                                  child: FutureBuilder<QuerySnapshot>(
-                                      future: usersRef
-                                          .doc(authController.firebaseUser.uid)
-                                          .collection('colors')
-                                          .get(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<QuerySnapshot>
-                                              snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return circularProgress();
-                                        }
-
-                                        return ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data.docs.length,
-                                          itemBuilder: (context, index) =>
-                                              Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 7, left: 7),
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: 10, bottom: 10),
-                                              width: 100,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                color: snapshot.data.docs[index]
-                                                            ['name'].toString().i
-                                                    ? Colors.red
-                                                    ,
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(20),
+                              snapshot.data['hasColor'] == true
+                                  ? SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        width: Get.width,
+                                        height: 120,
+                                        margin: EdgeInsets.only(top: 13),
+                                        child: FutureBuilder<QuerySnapshot>(
+                                            future: usersRef
+                                                .doc(authController
+                                                    .firebaseUser.uid)
+                                                .collection('colors')
+                                                .orderBy('count',
+                                                    descending: true)
+                                                .get(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<QuerySnapshot>
+                                                    snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return circularProgress();
+                                              }
+                                              return ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    snapshot.data.docs.length,
+                                                itemBuilder: (context, index) =>
+                                                    Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 7,
+                                                          left: 7,
+                                                          bottom: 15),
+                                                  child: Container(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10, bottom: 10),
+                                                    width: 100,
+                                                    height: 100,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(snapshot
+                                                              .data.docs[index]
+                                                          ['color']),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(20),
+                                                      ),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey
+                                                              .withOpacity(0.3),
+                                                          spreadRadius: 1,
+                                                          blurRadius: 2,
+                                                          offset: Offset(10,
+                                                              10), // changes position of shadow
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Text(
+                                                          snapshot
+                                                              .data
+                                                              .docs[index]
+                                                                  ['count']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Color(
+                                                                0xff4D4D4D),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          snapshot.data
+                                                                  .docs[index]
+                                                              ['name'],
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Color(
+                                                                0xFF4D4D4D),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Text(
-                                                    snapshot.data
-                                                        .docs[index]['count']
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xff4D4D4D),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    snapshot.data.docs[index]
-                                                        ['name'],
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xFF4D4D4D),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                ),
-                              ),
+                                              );
+                                            }),
+                                      ),
+                                    )
+                                  : Text('no data'),
                             ],
                           ),
                         ),

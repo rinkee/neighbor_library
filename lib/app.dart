@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neighbor_library/screens/upload_mystyle_screen.dart';
-import 'package:neighbor_library/screens/upload_screen.dart';
+import 'package:neighbor_library/screens/upload_my_look_screen.dart';
+import 'package:neighbor_library/screens/my_look_sreen.dart';
 import 'package:neighbor_library/screens/user_screen.dart';
 
 // screens
 import 'package:neighbor_library/services/controller/screen_controller.dart';
 import 'screens/home_screen.dart';
 // import 'package:trytousergetx/screens/time_line_screen.dart';
-// import 'package:trytousergetx/screens/upload_screen.dart';
+// import 'package:trytousergetx/screens/my_look_sreen.dart';
 // import 'package:trytousergetx/screens/bookmark_screen.dart';
 // import 'package:trytousergetx/screens/my_page_screen.dart';
 
@@ -37,10 +37,10 @@ MyBottomNavigation() {
           break;
 
         case RouteName.UploadScreen:
-          return MyPostScreen();
+          return MyLookScreen();
           break;
         case RouteName.RegisterStyleScreen:
-          return UploadMystyleScreen();
+          return UploadMyLookScreen();
           break;
         case RouteName.BookmarkScreen:
           return HomeScreen();

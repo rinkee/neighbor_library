@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DetailMyLookScreen extends StatelessWidget {
+class DetailMyItemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

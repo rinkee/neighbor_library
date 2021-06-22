@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 
-class MyPostScreen extends StatelessWidget {
+class MyLookScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

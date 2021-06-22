@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:neighbor_library/screens/detail_my_look_screen.dart';
 import 'package:neighbor_library/screens/detail_view_item_screen.dart';
 import 'package:neighbor_library/screens/item_screen.dart';
-import 'package:neighbor_library/screens/upload_mystyle_screen.dart';
+import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:intl/intl.dart';
@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                                                 ConnectionState.waiting) {
                                               return circularProgress();
                                             }
-
+                                            final postSDD = snapshot.data.docs;
                                             return ListView.builder(
                                               scrollDirection: Axis.horizontal,
                                               itemCount: 5,
@@ -82,11 +82,12 @@ class HomeScreen extends StatelessWidget {
                                                 onTap: () {
                                                   Get.to(DetailMyLookScreen(),
                                                       arguments: {
-                                                        'title': snapshot
-                                                            .data
-                                                            .docs[index]
-                                                                ['postTitle']
-                                                            .toString()
+                                                        'postTitle':
+                                                            postSDD[index]
+                                                                ['postTitle'],
+                                                        'postImageURL': postSDD[
+                                                                index]
+                                                            ['postImageURL'],
                                                       });
                                                 },
                                                 child: Container(
@@ -96,8 +97,7 @@ class HomeScreen extends StatelessWidget {
                                                             .start,
                                                     children: [
                                                       Image.network(
-                                                        snapshot.data
-                                                                .docs[index]
+                                                        postSDD[index]
                                                             ['postImageURL'],
                                                         width: Get.width,
                                                         height:
@@ -105,9 +105,7 @@ class HomeScreen extends StatelessWidget {
                                                         fit: BoxFit.cover,
                                                       ),
                                                       Text(
-                                                        snapshot
-                                                            .data
-                                                            .docs[index]
+                                                        postSDD[index]
                                                                 ['postTitle']
                                                             .toString(),
                                                         style: TextStyle(
@@ -118,9 +116,7 @@ class HomeScreen extends StatelessWidget {
                                                             .ellipsis,
                                                       ),
                                                       Text(
-                                                        snapshot
-                                                            .data
-                                                            .docs[index]
+                                                        postSDD[index]
                                                                 ['postTitle']
                                                             .toString(),
                                                         style: TextStyle(
@@ -168,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                                                 child: RaisedButton(
                                                   onPressed: () {
                                                     Get.to(
-                                                        UploadMystyleScreen());
+                                                        UploadMyLookScreen());
                                                   },
                                                   child: Text(
                                                     '나의 룩 등록해 보기',
@@ -503,8 +499,8 @@ class HomeScreen extends StatelessWidget {
                                                     Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          right: 7,
-                                                          left: 7,
+                                                          right: 10,
+                                                          left: 10,
                                                           bottom: 15),
                                                   child: Container(
                                                     padding: EdgeInsets.only(
@@ -521,8 +517,20 @@ class HomeScreen extends StatelessWidget {
                                                       ),
                                                       boxShadow: [
                                                         BoxShadow(
-                                                          color: Colors.grey
-                                                              .withOpacity(0.3),
+                                                          color: snapshot.data.docs[
+                                                                          index]
+                                                                      [
+                                                                      'color'] ==
+                                                                  4294967295
+                                                              ? Colors.grey[300]
+                                                                  .withOpacity(
+                                                                      0.5)
+                                                              : Color(snapshot
+                                                                          .data
+                                                                          .docs[index]
+                                                                      ['color'])
+                                                                  .withOpacity(
+                                                                      0.5),
                                                           spreadRadius: 1,
                                                           blurRadius: 2,
                                                           offset: Offset(10,

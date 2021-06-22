@@ -13,49 +13,159 @@ import '../main.dart';
 
 final _formKey = GlobalKey<FormState>();
 TextEditingController nameController = TextEditingController();
+int gender;
+double manBoxOpacity = 1.0;
+double womanBoxOpacity = 1.0;
 
-class SaveUserInFirestoreScreen extends StatelessWidget {
+class SaveUserInFirestoreScreen extends StatefulWidget {
+  @override
+  _SaveUserInFirestoreScreenState createState() =>
+      _SaveUserInFirestoreScreenState();
+}
+
+class _SaveUserInFirestoreScreenState extends State<SaveUserInFirestoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: "Enter User NickName",
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '성별',
+                  style: TextStyle(
+                    fontSize: Get.width / 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 13, bottom: 30),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              gender = 1;
+                              manBoxOpacity = 1.0;
+                              womanBoxOpacity = 0.5;
+                              print(gender);
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xFFF2E9EF)
+                                    .withOpacity(manBoxOpacity),
+                                borderRadius: BorderRadius.circular(20)),
+                            height: Get.width / 2.2,
+                            child: Center(
+                              child: Text(
+                                '남',
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black
+                                        .withOpacity(manBoxOpacity)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              gender = 2;
+                              womanBoxOpacity = 1.0;
+                              manBoxOpacity = 0.5;
+                              print(gender);
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xFFF2E9EF)
+                                    .withOpacity(womanBoxOpacity),
+                                borderRadius: BorderRadius.circular(20)),
+                            height: Get.width / 2.2,
+                            child: Center(
+                              child: Text(
+                                '여',
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black
+                                        .withOpacity(womanBoxOpacity)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  '닉네임',
+                  style: TextStyle(
+                    fontSize: Get.width / 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 13),
+                  child: TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: "닉네임을 입력해 주세요",
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    validator: (val) {
+                      if (val.trim().length < 2 || val.isEmpty) {
+                        return '닉네임이 너무 짧아요. (< 5)';
+                      } else if (val.trim().length > 15 || val.isEmpty) {
+                        return '닉네임이 너무 길어요. (> 15)';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50, left: 24, right: 24),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: ButtonTheme(
+                      minWidth: Get.width,
+                      height: 56,
+                      child: RaisedButton(
+                        onPressed: () {
+                          saveUserInfoToFirestore();
+                          Get.back();
+                          Get.offAll(MyApp());
+                          print('유저 등록 완료');
+                        },
+                        child: Text(
+                          '등록하기',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  validator: (val) {
-                    if (val.trim().length < 2 || val.isEmpty) {
-                      return '닉네임이 너무 짧아요. (< 5)';
-                    } else if (val.trim().length > 15 || val.isEmpty) {
-                      return '닉네임이 너무 길어요. (> 15)';
-                    } else {
-                      return null;
-                    }
-                  },
                 ),
-              ),
-              RaisedButton(
-                color: Colors.lightBlue,
-                onPressed: () {
-                  saveUserInfoToFirestore();
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => MyApp()));
-                  Get.back();
-                  Get.to(MyApp());
-                },
-                child: Text('Submit'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -79,9 +189,11 @@ saveUserInfoToFirestore() async {
     usersRef
         .doc(user.uid)
         .set({
-          'bio': '',
+          'gender': gender,
           'email': user.email,
           // 'followerCount': 0,
+          'hasItem': false,
+          'hasColor': false,
           'uId': user.uid,
           'postCount': 0,
           'profileName': user.displayName,

@@ -17,12 +17,12 @@ String _ColorValue;
 Color myChoiceColor = null; // 유저가 선택한 컬러
 int _ChoiceNumber = null; // db로 넘어가는 헥사코드 컬러값
 
-class UploadMystyleScreen extends StatefulWidget {
+class UploadMyLookScreen extends StatefulWidget {
   @override
-  _UploadMystyleScreenState createState() => _UploadMystyleScreenState();
+  _UploadMyLookScreenState createState() => _UploadMyLookScreenState();
 }
 
-class _UploadMystyleScreenState extends State<UploadMystyleScreen> {
+class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
   String postId = Uuid().v4();
@@ -249,6 +249,11 @@ class _UploadMystyleScreenState extends State<UploadMystyleScreen> {
   /// Crop Image
   _cropImage(filePath) async {
     File croppedImage = await ImageCropper.cropImage(
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2
+      ],
       sourcePath: filePath,
       maxWidth: 1080,
       maxHeight: 1080,

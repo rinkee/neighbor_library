@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/myModal.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/screens/my_look_sreen.dart';
 import 'package:neighbor_library/screens/user_screen.dart';
@@ -36,14 +37,14 @@ MyBottomNavigation() {
           return HomeScreen();
           break;
 
-        case RouteName.UploadScreen:
+        case RouteName.MyLookScreen:
           return MyLookScreen();
           break;
-        case RouteName.RegisterStyleScreen:
-          return UploadMyLookScreen();
+        case RouteName.myModal:
+          return myModal();
           break;
         case RouteName.BookmarkScreen:
-          return HomeScreen();
+          return UploadMyLookScreen();
           break;
         case RouteName.UserScreen:
           return UserScreen();

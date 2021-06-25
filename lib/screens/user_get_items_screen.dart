@@ -7,12 +7,12 @@ import 'package:neighbor_library/widgets/items_view.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class DetailViewItemScreen extends StatefulWidget {
+class UserGetItemsScreen extends StatefulWidget {
   @override
-  _DetailViewItemScreenState createState() => _DetailViewItemScreenState();
+  _UserGetItemsScreenState createState() => _UserGetItemsScreenState();
 }
 
-class _DetailViewItemScreenState extends State<DetailViewItemScreen> {
+class _UserGetItemsScreenState extends State<UserGetItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +44,7 @@ class _DetailViewItemScreenState extends State<DetailViewItemScreen> {
                 .doc(authController.firebaseUser.uid)
                 .collection('items')
                 .doc(Get.arguments['snapshotIndex']['name'])
-                .collection('items')
+                .collection('itemList')
                 .get(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -67,7 +67,7 @@ class _DetailViewItemScreenState extends State<DetailViewItemScreen> {
                           padding: const EdgeInsets.only(left: 0, right: 0),
                           child: new ItemsView(
                             queryDS: snapshot.data.docs[index],
-                            accessDetail: true,
+                            showItems: true,
                           )),
                     )
 

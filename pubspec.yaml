@@ -52,6 +52,9 @@ dependencies:
   # icon
   flutter_vector_icons: ^1.0.0
 
+  # modal bottom sheet
+  modal_bottom_sheet: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

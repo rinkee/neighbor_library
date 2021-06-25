@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/screens/detail_my_look_screen.dart';
-import 'package:neighbor_library/screens/detail_view_item_screen.dart';
+import 'package:neighbor_library/screens/user_get_items_screen.dart';
 import 'package:neighbor_library/screens/item_screen.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/utilities/constants.dart';
@@ -10,6 +10,7 @@ import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
+  double LP = 5;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +258,7 @@ class HomeScreen extends StatelessWidget {
                                             child: GestureDetector(
                                               onTap: () {
                                                 Get.to(
-                                                  DetailViewItemScreen(),
+                                                  UserGetItemsScreen(),
                                                   arguments: {
                                                     "snapshotIndex": snapshot
                                                         .data.docs[index],
@@ -490,6 +491,7 @@ class HomeScreen extends StatelessWidget {
                                                   ConnectionState.waiting) {
                                                 return circularProgress();
                                               }
+
                                               return ListView.builder(
                                                 scrollDirection:
                                                     Axis.horizontal,
@@ -497,79 +499,95 @@ class HomeScreen extends StatelessWidget {
                                                     snapshot.data.docs.length,
                                                 itemBuilder: (context, index) =>
                                                     Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 10,
-                                                          left: 10,
-                                                          bottom: 15),
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: 10, bottom: 10),
-                                                    width: 100,
-                                                    height: 100,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(snapshot
-                                                              .data.docs[index]
-                                                          ['color']),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(20),
+                                                  padding: index == 0
+                                                      ? EdgeInsets.only(
+                                                          right: 5,
+                                                          left: 24,
+                                                          bottom: 10)
+                                                      : EdgeInsets.only(
+                                                          right: 5,
+                                                          left: 5,
+                                                          bottom: 10),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      print(index);
+                                                    },
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                        top: 10,
+                                                        bottom: 10,
                                                       ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: snapshot.data.docs[
-                                                                          index]
-                                                                      [
-                                                                      'color'] ==
-                                                                  4294967295
-                                                              ? Colors.grey[300]
-                                                                  .withOpacity(
-                                                                      0.5)
-                                                              : Color(snapshot
-                                                                          .data
-                                                                          .docs[index]
-                                                                      ['color'])
-                                                                  .withOpacity(
-                                                                      0.5),
-                                                          spreadRadius: 1,
-                                                          blurRadius: 2,
-                                                          offset: Offset(10,
-                                                              10), // changes position of shadow
+                                                      width: 100,
+                                                      height: 100,
+                                                      decoration: BoxDecoration(
+                                                        color: Color(snapshot
+                                                                .data
+                                                                .docs[index]
+                                                            ['color']),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(100),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Text(
-                                                          snapshot
-                                                              .data
-                                                              .docs[index]
-                                                                  ['count']
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Color(
-                                                                0xff4D4D4D),
+                                                        // boxShadow: [
+                                                        //   BoxShadow(
+                                                        //     color: snapshot.data
+                                                        //                     .docs[index]
+                                                        //                 [
+                                                        //                 'color'] ==
+                                                        //             4294967295
+                                                        //         ? Colors
+                                                        //             .grey[300]
+                                                        //             .withOpacity(
+                                                        //                 0.5)
+                                                        //         : Color(snapshot
+                                                        //                     .data
+                                                        //                     .docs[index]
+                                                        //                 [
+                                                        //                 'color'])
+                                                        //             .withOpacity(
+                                                        //                 0.5),
+                                                        //     spreadRadius: 1,
+                                                        //     blurRadius: 2,
+                                                        //     offset: Offset(10,
+                                                        //         10), // changes position of shadow
+                                                        //   ),
+                                                        // ],
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            snapshot
+                                                                .data
+                                                                .docs[index]
+                                                                    ['count']
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color(
+                                                                  0xff4D4D4D),
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          snapshot.data
-                                                                  .docs[index]
-                                                              ['name'],
-                                                          style: TextStyle(
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Color(
-                                                                0xFF4D4D4D),
+                                                          Text(
+                                                            snapshot.data
+                                                                    .docs[index]
+                                                                ['name'],
+                                                            style: TextStyle(
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color(
+                                                                  0xFF4D4D4D),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),

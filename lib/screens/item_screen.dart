@@ -50,6 +50,7 @@ class _ItemScreenState extends State<ItemScreen> {
                 return circularProgress();
               }
 
+              /// 아이템 더보기 화면
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 1,
@@ -61,7 +62,7 @@ class _ItemScreenState extends State<ItemScreen> {
                   padding: const EdgeInsets.only(left: 0, right: 0),
                   child: new ItemsView(
                     queryDS: snapshot.data.docs[index],
-                    accessDetail: false,
+                    showItems: false,
                   ),
                 ),
               );

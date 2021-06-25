@@ -13,6 +13,8 @@ class UserScreen extends StatelessWidget {
         children: [
           Text(authController.firebaseUser.displayName),
           Text(userController.user.value.username),
+
+          /// firestore에서 값을 불러오면 바로바로 변화가 반영
           RaisedButton(
             onPressed: () {
               authController.signOut();

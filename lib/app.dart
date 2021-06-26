@@ -60,38 +60,49 @@ MyBottomNavigation() {
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black45,
         onTap: ScreenController.to.changeScreenIndex,
+        iconSize: 30,
         items: [
           BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: Icon(Feather.home),
+              padding: const EdgeInsets.only(left: 10, bottom: 3),
+              child: Icon(
+                Feather.home,
+              ),
             ),
-            label: '홈',
+            label: '',
           ),
           BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Icon(Feather.compass),
+                child: Icon(
+                  Feather.compass,
+                ),
               ),
-              label: '라이브'),
+              label: ''),
           BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Icon(Feather.plus_circle),
+                child: Icon(
+                  Feather.plus_circle,
+                ),
               ),
-              label: '추가'),
+              label: ''),
           BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Icon(Icons.bookmarks_outlined),
+                child: Icon(
+                  Icons.bookmarks_outlined,
+                ),
               ),
-              label: '푸마크'),
+              label: ''),
           BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Icon(Feather.user),
+                padding: const EdgeInsets.only(right: 10, bottom: 3),
+                child: Icon(
+                  Feather.user,
+                ),
               ),
-              label: '유저'),
+              label: ''),
         ],
         selectedLabelStyle: TextStyle(fontSize: 11),
         unselectedLabelStyle: TextStyle(fontSize: 10),

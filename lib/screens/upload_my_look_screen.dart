@@ -130,7 +130,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
                               choiceColor: Colors.red),
                           changeColorValue(
                               value: 'orange',
-                              number: 0xFF9800,
+                              number: 0xFFFF9800,
                               choiceColor: Colors.orange),
                           changeColorValue(
                               value: 'yellow',
@@ -334,6 +334,26 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       },
       'category': myList[selectItem]
     });
+    usersRef
+        .doc(authController.firebaseUser.uid)
+        .collection('dailyLooks')
+        .doc(postId)
+        .set({
+      'postId': postId,
+      'postImageURL': url,
+      'postTitle': postTitle,
+      'timestamp': Timestamp.now(),
+      'userInfo': {
+        'uId': authController.firebaseUser.uid,
+        'userPhotoURL': authController.firebaseUser.photoURL,
+        'username': userController.user.value.username,
+      },
+      'counts': {
+        'likesCount': 0,
+        'commentsCount': 0,
+      },
+      'category': myList[selectItem]
+    });
   }
 
   saveItemInfoToFireStore({
@@ -433,7 +453,6 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
             postTitle: postTitleController.text,
           )
         : saveItemInfoToFireStore(url: downloadUrl);
-
     widget.fromLook == true
         ? usersRef.doc(authController.firebaseUser.uid).update({
             'postCount': FieldValue.increment(1),

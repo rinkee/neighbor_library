@@ -33,3 +33,10 @@ final DateFormat formatter = DateFormat('yy년 MM월 dd일');
 // size //
 const double kEmojiContainerSize = 65;
 const double kButtonSize = 35;
+double kMenuFontSize = Get.width / 12;
+
+const kDefaultCurrentRecordTextStyle =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
+const kDefaultCurrentRecordDateTextStyle =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54);

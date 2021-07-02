@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neighbor_library/screens/detail_my_look_screen.dart';
 import 'package:neighbor_library/screens/user_get_items_screen.dart';
 import 'package:neighbor_library/screens/item_screen.dart';
@@ -10,6 +11,7 @@ import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:intl/intl.dart';
 
 int daySeconds = 86400;
+double fontSIZE = 100;
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -17,25 +19,20 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Facode',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              ),
-              Text(
-                '아름다운 나의 기록',
-                style: TextStyle(color: Colors.black54, fontSize: 12),
-              )
-            ],
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(
+            'Facode',
+            // style: TextStyle(
+            //     color: Colors.black,
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 25),
+            style: GoogleFonts.montserrat(
+                fontSize: kMenuFontSize,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                color: Colors.black),
           ),
         ),
-        centerTitle: false,
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -57,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                   itemCount: 1,
                   itemBuilder: (context, index) => Padding(
                     padding:
-                        const EdgeInsets.only(top: 24, bottom: 24, right: 0),
+                        const EdgeInsets.only(top: 14, bottom: 24, right: 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -70,10 +67,14 @@ class HomeScreen extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(left: 24, bottom: 13),
                                 child: Text(
-                                  '6M DAILY',
-                                  style: TextStyle(
-                                    fontSize: Get.width / 10,
+                                  'SUMMER DAILY',
+                                  // style: TextStyle(
+                                  //   fontSize: Get.width / 14,
+                                  //   fontWeight: FontWeight.bold,
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 25,
                                     fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
                                   ),
                                 ),
                               ),
@@ -155,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                                                       //       Get.height / 2.5,
                                                       //   fit: BoxFit.cover,
                                                       // ),
-                                                      SizedBox(height: 5),
+                                                      SizedBox(height: 10),
                                                       Text(
                                                         postSDD[index]
                                                                 ['postTitle']
@@ -163,17 +164,17 @@ class HomeScreen extends StatelessWidget {
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 25),
+                                                            fontSize: 20),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
                                                       SizedBox(height: 3),
                                                       Text(
-                                                        postSDD[index]
-                                                                ['postTitle']
+                                                        postSDD[index][
+                                                                'postDescription']
                                                             .toString(),
                                                         style: TextStyle(
-                                                          fontSize: 16,
+                                                          fontSize: 14,
                                                           color:
                                                               Color(0xFF222222),
                                                         ),
@@ -249,7 +250,7 @@ class HomeScreen extends StatelessWidget {
 
                         /// 아이템
                         Padding(
-                          padding: EdgeInsets.only(top: 30, bottom: 30),
+                          padding: EdgeInsets.symmetric(vertical: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -261,9 +262,13 @@ class HomeScreen extends StatelessWidget {
                                     padding: const EdgeInsets.only(left: 24),
                                     child: Text(
                                       'Items',
-                                      style: TextStyle(
+                                      // style: TextStyle(
+                                      //   fontSize: kMenuFontSize,
+                                      //   fontWeight: FontWeight.bold,
+                                      style: GoogleFonts.montserrat(
                                         fontSize: kMenuFontSize,
                                         fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
                                       ),
                                     ),
                                   ),
@@ -284,8 +289,8 @@ class HomeScreen extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 child: Container(
                                   width: Get.width,
-                                  height: 100,
-                                  margin: EdgeInsets.only(top: 13),
+                                  height: 120,
+                                  margin: EdgeInsets.only(top: 20),
                                   child: FutureBuilder<QuerySnapshot>(
                                       future: usersRef
                                           .doc(authController.firebaseUser.uid)
@@ -323,9 +328,8 @@ class HomeScreen extends StatelessWidget {
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.only(
-                                                    top: 10, bottom: 10),
-                                                width: 100,
-                                                height: 100,
+                                                    top: 7, bottom: 10),
+                                                width: 120,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xFFF2F1E9),
                                                   borderRadius:
@@ -351,25 +355,28 @@ class HomeScreen extends StatelessWidget {
                                                     Image(
                                                       image: AssetImage(
                                                           'assets/icons/${snapshot.data.docs[index]['name']}.png'),
-                                                      width: 50,
+                                                      width: 60,
                                                     ),
                                                     Text(
                                                       snapshot.data
                                                           .docs[index]['count']
                                                           .toString(),
                                                       style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color:
                                                             Color(0xff4D4D4D),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      height: 3,
+                                                    ),
                                                     Text(
                                                       snapshot.data.docs[index]
                                                           ['name'],
                                                       style: TextStyle(
-                                                        fontSize: 10,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color:
@@ -390,11 +397,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 10.0,
-                          child: new Center(
-                            child: new Container(
-                              height: 10.0,
-                              color: Colors.grey[100],
-                            ),
+                          child: new Container(
+                            height: 10.0,
+                            color: Colors.grey[100],
                           ),
                         ),
                         // 최근기록
@@ -406,13 +411,17 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Current Record',
-                                style: TextStyle(
+                                // style: TextStyle(
+                                //   fontSize: kMenuFontSize,
+                                //   fontWeight: FontWeight.bold,
+                                style: GoogleFonts.montserrat(
                                   fontSize: kMenuFontSize,
                                   fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 20),
+                                padding: const EdgeInsets.only(top: 24),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -425,7 +434,7 @@ class HomeScreen extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('데일리룩',
+                                              Text('Daily Look',
                                                   style:
                                                       kDefaultCurrentRecordTextStyle),
                                               Text(
@@ -450,7 +459,7 @@ class HomeScreen extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('아이템',
+                                              Text('Item',
                                                   style:
                                                       kDefaultCurrentRecordTextStyle),
                                               Text('3일전',
@@ -463,7 +472,7 @@ class HomeScreen extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('구매',
+                                              Text('Buy',
                                                   style:
                                                       kDefaultCurrentRecordTextStyle),
                                               Text(
@@ -524,7 +533,7 @@ class HomeScreen extends StatelessWidget {
 
                         /// 선호 컬
                         Container(
-                          padding: EdgeInsets.only(top: 30, bottom: 30),
+                          padding: EdgeInsets.symmetric(vertical: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -536,14 +545,18 @@ class HomeScreen extends StatelessWidget {
                                     padding: const EdgeInsets.only(left: 24),
                                     child: Text(
                                       'Favorite Colors',
-                                      style: TextStyle(
+                                      // style: TextStyle(
+                                      //   fontSize: kMenuFontSize,
+                                      //   fontWeight: FontWeight.bold,
+                                      style: GoogleFonts.montserrat(
                                         fontSize: kMenuFontSize,
                                         fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 20),
+                                    padding: const EdgeInsets.only(right: 24),
                                     child: InkWell(
                                       onTap: () {
                                         Get.to(ItemScreen());
@@ -556,7 +569,7 @@ class HomeScreen extends StatelessWidget {
                               snapshot.data['hasColor'] == true
                                   ? Container(
                                       height: Get.height / 5,
-                                      margin: EdgeInsets.only(top: 13),
+                                      margin: EdgeInsets.only(top: 24),
                                       child: FutureBuilder<QuerySnapshot>(
                                           future: usersRef
                                               .doc(authController
@@ -583,11 +596,9 @@ class HomeScreen extends StatelessWidget {
                                                       ? EdgeInsets.only(
                                                           left: 24,
                                                           right: 10,
-                                                          bottom: 0)
+                                                        )
                                                       : EdgeInsets.only(
-                                                          left: 10,
-                                                          bottom: 0,
-                                                          right: 10),
+                                                          left: 10, right: 10),
                                                   child: Column(
                                                     children: [
                                                       Container(
@@ -654,11 +665,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 10.0,
-                          child: new Center(
-                            child: new Container(
-                              height: 10.0,
-                              color: Colors.grey[100],
-                            ),
+                          child: new Container(
+                            height: 10.0,
+                            color: Colors.grey[100],
                           ),
                         ),
                       ],

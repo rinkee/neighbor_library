@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
+import 'package:neighbor_library/widgets/progress_widget.dart';
 
 // for upload
 import 'package:uuid/uuid.dart';
@@ -34,8 +36,29 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
   String postId = Uuid().v4();
   final ImagePicker _picker = ImagePicker();
   File imgFile;
-  int selectItem = 0;
-  var myList = ['cap', 'shoes', 'dress'];
+  int selectItemIndex = 0;
+  var myItemsList = ['cap', 'shoes', 'dress', 'glasses'];
+  var myItemsListKR = [
+    {
+      'cap': '모자',
+      'shoes': '신발',
+      'dress': '드레스',
+      'glasses': '안경',
+    }
+  ];
+
+  bool _isDialogVisible = false;
+
+  void _showDialog() {
+    setState(() {
+      _isDialogVisible = true;
+    });
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _isDialogVisible = false;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -46,271 +69,362 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.fromLook == true ? '코디 등록' : '아이템 등록',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      backgroundColor: Colors.white,
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 30, left: 24, right: 24, bottom: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                imgFile == null
-                    ? Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: myChoiceColor == null
-                                    ? Colors.black
-                                    : myChoiceColor,
-                                width: 5),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text(
+              widget.fromLook == true ? '코디 등록' : '아이템 등록',
+              style: TextStyle(color: Colors.black),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+          ),
+          backgroundColor: Colors.white,
+          body: ListView(
+            children: [
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 20, left: 24, right: 24, bottom: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (imgFile == null)
+                      GestureDetector(
+                        onTap: _getImage,
+                        child: Container(
+                            width: Get.width / 2 - 12,
+                            height: Get.width / 2 - 12,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                // border: Border.all(
+                                //     color: myChoiceColor == null
+                                //         ? Colors.black
+                                //         : myChoiceColor,
+                                //     width: 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            child: Center(child: Text('이미지를 선택하세요'))),
+                      )
+                    else
+                      Stack(
+                        children: [
+                          Container(
+                            width: Get.width / 2 - 12,
+                            height: Get.width / 2 - 12,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Colors.black54,
+                              //     spreadRadius: 3,
+                              //     blurRadius: 10,
+                              //     offset: Offset(
+                              //         5, 5), // changes position of shadow
+                              //   ),
+                              // ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: Image.file(
+                                File(imgFile.path),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon: Icon(Feather.x),
+                              color: Colors.black54,
+                              onPressed: () {
+                                setState(() {
+                                  imgFile = null;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    /// Select Color
+
+                    Wrap(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Text(
+                            '컬러',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: myChoiceColor == null
+                                  ? Color(0xFF888888)
+                                  : myChoiceColor,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              changeColorValue(
+                                  value: 'red',
+                                  number: 0xFFF44336,
+                                  choiceColor: Colors.red),
+                              changeColorValue(
+                                  value: 'orange',
+                                  number: 0xFFFF9800,
+                                  choiceColor: Colors.orange),
+                              changeColorValue(
+                                  value: 'yellow',
+                                  number: 0xFFEB3B,
+                                  choiceColor: Colors.yellow),
+                              changeColorValue(
+                                  value: 'green',
+                                  number: 0xFF4CAF50,
+                                  choiceColor: Colors.green),
+                              changeColorValue(
+                                  value: 'blue',
+                                  number: 0xFF2196F3,
+                                  choiceColor: Colors.blue),
+                              changeColorValue(
+                                  value: 'purple',
+                                  number: 0xFF9C27B0,
+                                  choiceColor: Colors.purple),
+                              changeColorValue(
+                                  value: 'white',
+                                  number: 0xFFFFFFFF,
+                                  choiceColor: Colors.white),
+                              changeColorValue(
+                                  value: 'grey',
+                                  number: 0xFF9E9E9E,
+                                  choiceColor: Colors.grey),
+                              changeColorValue(
+                                  value: 'black',
+                                  number: 0xFF000000,
+                                  choiceColor: Colors.black),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /// 코디등록인 경우 화면
+                    widget.fromLook == true
+                        ? Wrap(
                             children: [
-                              Text('no image'),
-                              RaisedButton(
-                                onPressed: _getImage,
-                                child: Text('이미지'),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '제목',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF888888),
+                                  ),
+                                ),
+                              ),
+                              TextField(
+                                controller: postTitleController,
+                              ),
+
+                              /// 설명
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '메모',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF888888),
+                                  ),
+                                ),
+                              ),
+                              TextField(
+                                controller: postDescriptionController,
+                              ),
+                            ],
+                          )
+
+                        /// 아이템 등록 화면
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '분류',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF888888),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: InkWell(
+                                    onTap: () {
+                                      Get.bottomSheet(
+                                        Container(
+                                          height: Get.height / 3,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white),
+                                          child: CupertinoPicker(
+                                              itemExtent: 50,
+                                              onSelectedItemChanged: (value) {
+                                                setState(() {
+                                                  selectItemIndex = value;
+                                                });
+
+                                                print(value);
+                                              },
+                                              children: [
+                                                for (var i in myItemsList)
+                                                  Center(
+                                                    child: Text(
+                                                      myItemsListKR[0][i],
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    ),
+                                                  )
+                                              ]),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          myItemsListKR[0]
+                                              [myItemsList[selectItemIndex]],
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            color: Color(0xFF4A4A4A),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Column(
+                                          children: [
+                                            Icon(
+                                              Feather.chevron_down,
+                                              color: Color(0xFF4A4A4A),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    )),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '상품명',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF888888),
+                                  ),
+                                ),
+                              ),
+                              TextField(
+                                controller: itemNameController,
+                                decoration: InputDecoration(
+                                  hintText: '상품명을 입력해 주세요',
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                                maxLines: null,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '메모',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF888888),
+                                  ),
+                                ),
+                              ),
+                              TextField(
+                                controller: itemDescriptionController,
+                                decoration: InputDecoration(
+                                  hintText: '자유롭게 메모를 입력해 주세요',
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                                maxLines: null,
                               ),
                             ],
                           ),
-                        ))
-                    : Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54, width: 7),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.file(
-                            File(imgFile.path),
-                            fit: BoxFit.cover,
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: ButtonTheme(
+                          buttonColor: Colors.blueAccent,
+                          minWidth: Get.width,
+                          height: 56,
+                          child: RaisedButton(
+                            onPressed: () {
+                              widget.fromLook == true
+                                  ? controlUploadAndSave()
+                                  : controlUploadAndSave();
+                              Get.snackbar('나의 코디', '등록을 완료하였습니다.',
+                                  snackPosition: SnackPosition.TOP);
+                              print('update post');
+                            },
+                            child: Text(
+                              widget.fromLook == true ? '코디 등록하기' : '아이템 등록하기',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-
-                /// Select Color
-
-                Wrap(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Text(
-                        '컬러',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: myChoiceColor == null
-                              ? Color(0xFF888888)
-                              : myChoiceColor,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          changeColorValue(
-                              value: 'red',
-                              number: 0xFFF44336,
-                              choiceColor: Colors.red),
-                          changeColorValue(
-                              value: 'orange',
-                              number: 0xFFFF9800,
-                              choiceColor: Colors.orange),
-                          changeColorValue(
-                              value: 'yellow',
-                              number: 0xFFEB3B,
-                              choiceColor: Colors.yellow),
-                          changeColorValue(
-                              value: 'green',
-                              number: 0xFF4CAF50,
-                              choiceColor: Colors.green),
-                          changeColorValue(
-                              value: 'blue',
-                              number: 0xFF2196F3,
-                              choiceColor: Colors.blue),
-                          changeColorValue(
-                              value: 'purple',
-                              number: 0xFF9C27B0,
-                              choiceColor: Colors.purple),
-                          changeColorValue(
-                              value: 'white',
-                              number: 0xFFFFFFFF,
-                              choiceColor: Colors.white),
-                          changeColorValue(
-                              value: 'grey',
-                              number: 0xFF9E9E9E,
-                              choiceColor: Colors.grey),
-                          changeColorValue(
-                              value: 'black',
-                              number: 0xFF000000,
-                              choiceColor: Colors.black),
-                        ],
                       ),
                     ),
                   ],
                 ),
-
-                /// 코디등록인 경우 화면
-                widget.fromLook == true
-                    ? Wrap(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              '제목',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                          ),
-                          TextField(
-                            controller: postTitleController,
-                          ),
-
-                          /// 설명
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              '메모',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                          ),
-                          TextField(
-                            controller: postDescriptionController,
-                          ),
-                        ],
-                      )
-
-                    /// 아이템 등록 화면
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              '분류',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                          ),
-                          FlatButton(
-                              onPressed: () {
-                                Get.bottomSheet(
-                                  Container(
-                                    height: 300,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
-                                    child: CupertinoPicker(
-                                        itemExtent: 40,
-                                        onSelectedItemChanged: (value) {
-                                          setState(() {
-                                            selectItem = value;
-                                          });
-
-                                          print(value);
-                                        },
-                                        children: [
-                                          Text('cap'),
-                                          Text('shoes'),
-                                          Text('drees'),
-                                        ]),
-                                  ),
-                                );
-                              },
-                              child: Text(myList[selectItem])),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              '상품명',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                          ),
-                          TextField(
-                            controller: itemNameController,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              '메모',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                          ),
-                          TextField(
-                            controller: itemDescriptionController,
-                          ),
-                        ],
-                      ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: ButtonTheme(
-                      buttonColor: widget.fromLook == true
-                          ? Colors.blueAccent
-                          : Colors.yellow[500],
-                      minWidth: Get.width,
-                      height: 56,
-                      child: RaisedButton(
-                        onPressed: () {
-                          widget.fromLook == true
-                              ? controlUploadAndSave()
-                              : controlUploadAndSave();
-                          Get.snackbar('나의 코디', '등록을 완료하였습니다.',
-                              snackPosition: SnackPosition.TOP);
-                          print('update post');
-                        },
-                        child: Text(
-                          widget.fromLook == true ? '코디 등록하기' : '아이템 등록하기',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: widget.fromLook == true
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+              )
+            ],
+          ),
+        ),
+        Visibility(
+            visible: _isDialogVisible,
+            child: Container(
+              color: Colors.black54,
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: CircularProgressIndicator(
+                  strokeWidth: 10,
+                  valueColor: AlwaysStoppedAnimation(Colors.black),
+                  backgroundColor: Colors.grey,
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ))
+      ],
     );
   }
 
@@ -322,6 +436,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       'postId': postId,
       'postImageURL': url,
       'postTitle': postTitle,
+      'postDescription': postDescriptionController.text,
       'timestamp': Timestamp.now(),
       'userInfo': {
         'uId': authController.firebaseUser.uid,
@@ -332,7 +447,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
         'likesCount': 0,
         'commentsCount': 0,
       },
-      'category': myList[selectItem]
+      'category': myItemsList[selectItemIndex]
     });
     usersRef
         .doc(authController.firebaseUser.uid)
@@ -342,6 +457,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       'postId': postId,
       'postImageURL': url,
       'postTitle': postTitle,
+      'postDescription': postDescriptionController.text,
       'timestamp': Timestamp.now(),
       'userInfo': {
         'uId': authController.firebaseUser.uid,
@@ -352,7 +468,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
         'likesCount': 0,
         'commentsCount': 0,
       },
-      'category': myList[selectItem]
+      'category': myItemsList[selectItemIndex]
     });
   }
 
@@ -362,7 +478,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
     usersRef
         .doc(authController.firebaseUser.uid)
         .collection('items')
-        .doc(myList[selectItem])
+        .doc(myItemsList[selectItemIndex])
         .collection('itemList')
         .doc(postId)
         .set({
@@ -379,18 +495,25 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
         'likesCount': 0,
         'commentsCount': 0,
       },
-      'category': myList[selectItem]
+      'category': myItemsList[selectItemIndex]
     });
   }
 
   /// Get from gallery
   Future _getImage() async {
     PickedFile image = await _picker.getImage(source: ImageSource.gallery);
+    _showDialog();
+    _cropImage(image.path);
     setState(() {
       this.imgFile = File(image.path);
     });
-    _cropImage(image.path);
   }
+
+  // void _GetImageAndCrop() {
+  //   _getImage();
+  //   linearProgress();
+  //   _cropImage(image.path);
+  // }
 
   /// Crop Image
   _cropImage(filePath) async {
@@ -461,7 +584,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
         : usersRef
             .doc(authController.firebaseUser.uid)
             .collection('items')
-            .doc(myList[selectItem])
+            .doc(myItemsList[selectItemIndex])
             .update({'count': FieldValue.increment(1)});
     //TODO 시간 없데이트는 아직
     DocumentSnapshot documentSnapshot = await usersRef
@@ -508,7 +631,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: new BorderRadius.all(Radius.circular(100)),
+          borderRadius: new BorderRadius.all(Radius.circular(10)),
           color: choiceColor,
         ),
         height: 30,

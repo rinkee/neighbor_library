@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 // screen
 import 'package:neighbor_library/app.dart';
+import 'package:neighbor_library/screens/detail_post_screen.dart';
+import 'package:neighbor_library/screens/home_screen.dart';
 // binding
 import 'binding/instance_binding.dart';
 // firebase
@@ -15,11 +17,25 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(GetMaterialApp(
+    initialRoute: "/",
+    getPages: [
+      GetPage(
+        name: "/",
+        page: () => HomeScreen(),
+      ),
+      GetPage(
+        name: "/DetailPostScreen",
+        page: () => DetailPostScreen(),
+      ),
+    ],
     debugShowCheckedModeBanner: false,
     initialBinding: InstanceBinding(),
     theme: ThemeData(
-      textTheme: GoogleFonts.notoSansTextTheme(),
-    ),
+        textTheme: GoogleFonts.notoSansTextTheme(),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30))))),
     home: MyApp(),
   ));
 }

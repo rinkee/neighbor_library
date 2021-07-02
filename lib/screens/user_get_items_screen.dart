@@ -18,7 +18,7 @@ class _UserGetItemsScreenState extends State<UserGetItemsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Get.arguments['snapshotIndex']['name'],
+          Get.arguments['snapshotIndex']['name'].toString().toUpperCase(),
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -76,7 +76,10 @@ class _UserGetItemsScreenState extends State<UserGetItemsScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('아이템을 등록해 주세요'),
+                          Text(
+                            '이런! 아직 등록된 아이템이 없어요',
+                            style: TextStyle(fontSize: 20),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 20, left: 20, right: 20, bottom: 20),

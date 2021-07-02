@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neighbor_library/screens/community_screen.dart';
 import 'package:neighbor_library/screens/myModal.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/screens/my_look_sreen.dart';
@@ -40,14 +41,15 @@ MyBottomNavigation() {
         case RouteName.MyLookScreen:
           return MyLookScreen();
           break;
-        case RouteName.myModal:
-          return myModal();
-          break;
-        case RouteName.BookmarkScreen:
-          return UploadMyLookScreen();
+
+        case RouteName.CommunityScreen:
+          return CommunityScreen();
           break;
         case RouteName.UserScreen:
           return UserScreen();
+          break;
+        case RouteName.Add:
+          // bottomSheet;
           break;
       }
       return Container();
@@ -64,7 +66,7 @@ MyBottomNavigation() {
         items: [
           BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.only(left: 10, bottom: 3),
+              padding: const EdgeInsets.only(top: 5, left: 10, bottom: 3),
               child: Icon(
                 Feather.home,
               ),
@@ -73,7 +75,7 @@ MyBottomNavigation() {
           ),
           BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.only(bottom: 3),
+                padding: const EdgeInsets.only(top: 5, bottom: 3),
                 child: Icon(
                   Feather.compass,
                 ),
@@ -81,23 +83,24 @@ MyBottomNavigation() {
               label: ''),
           BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.only(bottom: 3),
+                padding: const EdgeInsets.only(top: 5, bottom: 3),
                 child: Icon(
                   Feather.plus_circle,
+                  size: 40,
                 ),
               ),
               label: ''),
           BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.only(bottom: 3),
+                padding: const EdgeInsets.only(top: 5, bottom: 3),
                 child: Icon(
-                  Icons.bookmarks_outlined,
+                  Feather.link,
                 ),
               ),
               label: ''),
           BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.only(right: 10, bottom: 3),
+                padding: const EdgeInsets.only(top: 5, right: 10, bottom: 3),
                 child: Icon(
                   Feather.user,
                 ),

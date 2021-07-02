@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:neighbor_library/app.dart';
 import 'package:neighbor_library/screens/login_screen.dart';
 import 'package:neighbor_library/screens/save_user_in_firestore.dart';
+import 'package:neighbor_library/services/controller/screen_controller.dart';
 // controller
 import 'package:neighbor_library/services/controller/user_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
@@ -48,7 +49,8 @@ class AuthController extends GetxController {
         if (documentSnapshot.exists) {
           userController.change(
               id: authController.firebaseUser.uid,
-              username: documentSnapshot['username']);
+              username: documentSnapshot['username'],
+              photoURL: documentSnapshot['photoURL']);
 
           print('current usermodel update');
         }

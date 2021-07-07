@@ -31,9 +31,7 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
   String postId = Uuid().v4();
   final ImagePicker _picker = ImagePicker();
   File imgFile;
-  // 데이터를 불러올 컬렉션
-  int selectItemIndex = 0;
-  String choiceCaterogy = '코디고민';
+
   // 로딩 화면 컨트롤
   bool _isDialogVisible = false;
   void _showDialog() {
@@ -65,6 +63,13 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
               '게시물 등록',
               style: TextStyle(color: Colors.black),
             ),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    print(menuList[1].toString());
+                  })
+            ],
             backgroundColor: Colors.white,
             elevation: 0,
           ),
@@ -152,65 +157,50 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
                             ),
                           ),
                         ),
-                        FutureBuilder<QuerySnapshot>(
-                            future: communityRef.get(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return circularProgress();
-                              }
-                              final CommunitySD = snapshot.data.docs;
-                              return new Container(
-                                height: 45,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data.docs.length,
-                                  itemBuilder: (context, index) =>
-                                      GestureDetector(
-                                    onTap: () {
-                                      // 선택한 컬렉션으로 바꿈
-                                      print(CommunitySD[index]['title']);
-                                      setState(() {
-                                        choiceCaterogy =
-                                            CommunitySD[index]['title'];
-                                      });
-                                      print(choiceCaterogy);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Container(
-                                        width: 90,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(40),
-                                            ),
-                                            color: CommunitySD[index]
-                                                        ['title'] ==
-                                                    choiceCaterogy
-                                                ? Colors.blueAccent
-                                                : Colors.grey[200]),
-                                        child: Center(
-                                            child: Text(
-                                          CommunitySD[index]['title'],
-                                          style: TextStyle(
-                                              color: CommunitySD[index]
-                                                          ['title'] ==
-                                                      choiceCaterogy
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: CommunitySD[index]
-                                                          ['title'] ==
-                                                      choiceCaterogy
-                                                  ? FontWeight.bold
-                                                  : null),
-                                        )),
+                        Container(
+                          height: 45,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: menuList.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                // 선택한 컬렉션으로 바꿈
+                                setState(() {
+                                  choiceCategory = menuList[index].toString();
+                                });
+                                print(choiceCategory);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Container(
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(6),
                                       ),
-                                    ),
-                                  ),
+                                      color: menuList[index].toString() ==
+                                              choiceCategory
+                                          ? Colors.blueAccent
+                                          : Colors.grey[200]),
+                                  child: Center(
+                                      child: Text(
+                                    menuList[index].toString(),
+                                    style: TextStyle(
+                                        color: menuList[index].toString() ==
+                                                choiceCategory
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight:
+                                            menuList[index].toString() ==
+                                                    choiceCategory
+                                                ? FontWeight.bold
+                                                : null),
+                                  )),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
 
@@ -286,7 +276,7 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
                           child: RaisedButton(
                             onPressed: () {
                               controlUploadAndSave();
-                              Get.snackbar('나의 코디', '등록을 완료하였습니다.',
+                              Get.snackbar('커뮤니티', '게시물 등록을 완료하였습니다.',
                                   snackPosition: SnackPosition.TOP);
                               print('update post');
                             },
@@ -328,7 +318,8 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
 
   saveCommunityPostToFireStore(
       {String url, String postTitle, String postDescription}) {
-    communityRef.doc(choiceCaterogy).collection('posts').doc(postId).set({
+    communityRef.doc(postId).set({
+      'category': choiceCategory,
       'postId': postId,
       'postImageURL': url,
       'postTitle': postTitle,
@@ -343,6 +334,29 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
         'likesCount': 0,
         'commentsCount': 0,
       },
+      'likes': {}
+    });
+    usersRef
+        .doc(authController.firebaseUser.uid)
+        .collection('community')
+        .doc(postId)
+        .set({
+      'category': choiceCategory,
+      'postId': postId,
+      'postImageURL': url,
+      'postTitle': postTitle,
+      'postDescription': postDescriptionController.text,
+      'timestamp': Timestamp.now(),
+      'userInfo': {
+        'uId': authController.firebaseUser.uid,
+        'PhotoURL': authController.firebaseUser.photoURL,
+        'username': userController.user.value.username,
+      },
+      'counts': {
+        'likesCount': 0,
+        'commentsCount': 0,
+      },
+      'likes': {}
     });
   }
 

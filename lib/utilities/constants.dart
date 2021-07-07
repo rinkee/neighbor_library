@@ -26,9 +26,9 @@ final communityRef = _firestore.collection('community');
 final followRef = _firestore.collection('follow');
 
 // 컨트롤러 인식
-final authController = Get.put(AuthController());
-final userController = Get.put(UserController());
-final menuListController = Get.put(MenuListController());
+var authController = Get.put(AuthController());
+var userController = Get.put(UserController());
+var menuListController = Get.put(MenuListController());
 // final postController = Get.put(PostController());
 
 // currentUser data
@@ -36,6 +36,10 @@ final currentUserName = userController.user.value.username;
 
 // time
 final DateFormat formatter = DateFormat('yyyy년 MM월 dd일');
+
+// menus
+var menuList = ['코디고민', '중고 가격', '구매 고민', '11'];
+String choiceCategory = '코디고민';
 
 // size //
 const double kEmojiContainerSize = 65;

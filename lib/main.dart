@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neighbor_library/app.dart';
 import 'package:neighbor_library/screens/detail_post_screen.dart';
 import 'package:neighbor_library/screens/home_screen.dart';
+import 'package:neighbor_library/utilities/constants.dart';
 // binding
 import 'binding/instance_binding.dart';
 // firebase

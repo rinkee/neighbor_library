@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:neighbor_library/screens/aa.dart';
 import 'package:neighbor_library/screens/community_screen.dart';
 import 'package:neighbor_library/screens/sample.dart';
 import 'package:neighbor_library/utilities/constants.dart';
@@ -116,13 +117,7 @@ class _UserScreenState extends State<UserScreen> {
                     // ),
                     RaisedButton(
                       onPressed: () {
-                        communityRef
-                            .doc('구매 고민')
-                            .get()
-                            .then((DocumentSnapshot MenuSN) {
-                          // menuListController.change(title: MenuSN);
-                          print(MenuSN['title']);
-                        });
+                        Get.to(aa());
                       },
                       child: Text('aa'),
                     ),

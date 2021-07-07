@@ -50,8 +50,11 @@ class AuthController extends GetxController {
           userController.change(
               id: authController.firebaseUser.uid,
               username: documentSnapshot['username'],
-              photoURL: documentSnapshot['photoURL']);
+              photoURL: documentSnapshot['photoURL'],
+              isSeemed: documentSnapshot['isSeemed']);
 
+          print(userController.user.value.username);
+          print(userController.user.value.isSeemed);
           print('current usermodel update');
         }
       });

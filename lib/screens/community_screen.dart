@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:neighbor_library/screens/aa.dart';
+import 'package:neighbor_library/screens/active_screen.dart';
 import 'package:neighbor_library/screens/detail_post_screen.dart';
+import 'package:neighbor_library/screens/sample.dart';
 import 'package:neighbor_library/screens/upload_community_post_screen.dart';
+import 'package:neighbor_library/services/controller/user_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:intl/intl.dart';
@@ -16,9 +21,6 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  var menuList = ['코디고민', '중고 가격', '구매 고민', '스트릿'];
-  String choiceCategory = '코디고민';
-  int choicePostIndex;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +45,48 @@ class _CommunityScreenState extends State<CommunityScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
+          IconButton(icon: Icon(Feather.x), onPressed: () {}),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Feather.bell),
+                onPressed: () {
+                  Get.to(ActiveScreen());
+                  usersRef // DB의 값도 바꿔주
+                      .doc(authController.firebaseUser.uid)
+                      .update({'isSeemed': false});
+                  userController.change(
+                      id: authController.firebaseUser.uid,
+                      username: userController.user.value.username,
+                      photoURL: userController.user.value.photoURL,
+                      isSeemed: false);
+
+                  // isSeemed 이름을 바꾸자
+                  print(userController.user.value.isSeemed);
+                },
+                color: Colors.black,
+              ),
+              Positioned(
+                  right: 10,
+                  top: 15,
+                  child: Container(
+                    width: 7,
+                    height: 7,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(100))),
+                  )),
+            ],
+          ),
           IconButton(
             icon: Icon(Feather.edit_2),
             onPressed: () {
               showBarModalBottomSheet(
-                  expand: true,
-                  context: context,
-                  builder: (context) => UploadCommunityPostScreen());
+                expand: true,
+                context: context,
+                builder: (context) => UploadCommunityPostScreen(),
+              );
             },
             color: Colors.black,
           )
@@ -60,6 +97,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         children: [
           /// 상단 선택 메뉴
           Container(
+            margin: EdgeInsets.only(bottom: 5),
             height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -67,7 +105,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
                   // 선택한 컬렉션으로 바꿈
-                  // print(CommunitySD[index]['title']);
                   setState(() {
                     choiceCategory = menuList[index];
                   });
@@ -101,6 +138,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ),
           ),
+          GetX<UserController>(builder: (controller) {
+            return Column(
+              children: [
+                Text(
+                  'isSeemed : ${controller.user.value.isSeemed}',
+                  style: TextStyle(color: Colors.black),
+                ),
+
+                //
+              ],
+            );
+          }),
+
           Expanded(
             //로 크기를 줘야 에러가 Column안에 있더라도 에러가 안뜸
             child: ListView(
@@ -121,8 +171,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   child: Container(
                     child: FutureBuilder<QuerySnapshot>(
                         future: communityRef
-                            .doc(choiceCategory)
-                            .collection('posts')
+                            .where('category', isEqualTo: choiceCategory)
                             .get(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -139,28 +188,31 @@ class _CommunityScreenState extends State<CommunityScreen> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 24, vertical: 5),
                               child: InkWell(
-                                onTap: () {
-                                  // print(PostSN[index]['timestamp'].toDate);
-                                  print(formatter.format(
-                                      PostSN[index]['timestamp'].toDate()));
-
-                                  // Get.to(DetailPostScreen(), arguments: {
-                                  //   'choiceCaterogy': choiceCaterogy,
-                                  //   'postId': PostSN[index]['postId'],
-                                  //   'postTitle': PostSN[index]['postTitle'],
-                                  //   'username': PostSN[index]['userInfo']
-                                  //       ['username'],
-                                  //   'postDescription': PostSN[index]
-                                  //       ['postDescription'],
-                                  // });
-                                  Get.toNamed(
-                                      "/DetailPostScreen?choiceCategory=${choiceCategory}&postId=${PostSN[index]['postId']}&postTitle=${PostSN[index]['postTitle']}&username=${PostSN[index]['userInfo']['username']}&postDescription=${PostSN[index]['postDescription']}&timestamp=${formatter.format(PostSN[index]['timestamp'].toDate())}");
+                                onTap: () async {
+                                  var postId = PostSN[index]['postId'];
+                                  var postTitle = PostSN[index]['postTitle'];
+                                  var uId = PostSN[index]['userInfo']['uId'];
+                                  var username =
+                                      PostSN[index]['userInfo']['username'];
+                                  var timestamp = formatter.format(
+                                      PostSN[index]['timestamp'].toDate());
+                                  var likesCount =
+                                      PostSN[index]['counts']['likesCount'];
+                                  var commentsCount =
+                                      PostSN[index]['counts']['commentsCount'];
+                                  bool isLiked = PostSN[index]['likes']
+                                          [authController.firebaseUser.uid] ==
+                                      authController.firebaseUser.uid;
+                                  var value = await Get.toNamed(
+                                      "/DetailPostScreen?postId=${postId}&postTitle=${postTitle}&uId=${uId}&username=${username}&postDescription=${PostSN[index]['postDescription']}&timestamp=${timestamp}&commentsCount=${commentsCount}&likesCount=${likesCount}&isLiked=${isLiked}");
+                                  setState(() {
+                                    isLiked = value;
+                                  });
                                 },
                                 child: Container(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         PostSN[index]['postTitle'],
@@ -168,10 +220,62 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                             fontSize: 18, color: Colors.black),
                                       ),
                                       SizedBox(height: 3),
-                                      Text(
-                                        PostSN[index]['userInfo']['username'],
-                                        style:
-                                            TextStyle(color: Color(0xFF888888)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            PostSN[index]['userInfo']
+                                                ['username'],
+                                            style: TextStyle(
+                                                color: Colors.grey[800]),
+                                          ),
+
+                                          /// 오른쪽 좋아요, 댓글 부분
+                                          Row(
+                                            children: [
+                                              // 좋아요
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Feather.thumbs_up,
+                                                    color: Colors.grey[700],
+                                                    size: 14,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    PostSN[index]['counts']
+                                                            ['likesCount']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[700]),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(width: 10),
+                                              // 댓글
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Feather.message_circle,
+                                                    color: Colors.grey[700],
+                                                    size: 14,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    PostSN[index]['counts']
+                                                            ['commentsCount']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[700]),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          )
+                                        ],
                                       ),
                                       Divider(
                                         color: Color(0xff888888),

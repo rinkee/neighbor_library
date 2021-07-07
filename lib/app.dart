@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/screens/community_screen.dart';
+import 'package:neighbor_library/screens/community_screen2.dart';
 import 'package:neighbor_library/screens/myModal.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/screens/my_look_sreen.dart';
@@ -43,7 +44,7 @@ MyBottomNavigation() {
           break;
 
         case RouteName.CommunityScreen:
-          return CommunityScreen();
+          return CommunityScreen2();
           break;
         case RouteName.UserScreen:
           return UserScreen();
@@ -59,8 +60,8 @@ MyBottomNavigation() {
         type: BottomNavigationBarType.fixed,
         currentIndex: ScreenController.to.currentIndex.value,
         showSelectedLabels: true,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black45,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey[500],
         onTap: ScreenController.to.changeScreenIndex,
         iconSize: 30,
         items: [

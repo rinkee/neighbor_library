@@ -39,25 +39,12 @@ class AuthController extends GetxController {
       return LoginScreen();
     } else {
       firebaseUser = firebaseAuth.currentUser;
-      // 로그인 했나 체크 후 정보 MyUser에 저장
-      // TODO 유저 전환 후 업데이트가 되지않음 포스트를 올릴때 username이 그대로 저장된다는 문제가 있음
-      // 모든 데이터를 firestored에서 가져와서 의미가 없어짐 .
-      usersRef
-          .doc(authController.firebaseUser.uid)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          userController.change(
-              id: authController.firebaseUser.uid,
-              username: documentSnapshot['username'],
-              photoURL: documentSnapshot['photoURL'],
-              isSeemed: documentSnapshot['isSeemed']);
 
-          print(userController.user.value.username);
-          print(userController.user.value.isSeemed);
-          print('current usermodel update');
-        }
-      });
+      /// 로그인 했나 체크 후 정보 userList 저장
+      // userController.clearUser();
+      userController.fetchUser(authController.firebaseUser.uid);
+      print('userModelList update!!');
+
       update();
       return App();
     }
@@ -96,6 +83,10 @@ class AuthController extends GetxController {
         // userController.change(
         //     id: user.uid, username: documentSnapshot.data()['username']);
         print('current usermodel update');
+        // userController.clearUser();
+        userController.fetchUser(authController.firebaseUser.uid);
+        userController.fbuser.refresh();
+        print('userModelList update!!');
         update();
         Get.back();
         Get.offAll(App());
@@ -120,6 +111,7 @@ class AuthController extends GetxController {
     // Show loading widget till we sign out
     Get.dialog(Center(child: buildLoading()), barrierDismissible: false);
     await firebaseAuth.signOut();
+    print(userController.fbuser);
     Get.back();
     // Navigate to Login again
     Get.offAll(LoginScreen());

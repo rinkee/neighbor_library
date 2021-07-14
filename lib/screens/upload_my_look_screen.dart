@@ -16,7 +16,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as ImD;
 import 'package:path_provider/path_provider.dart';
 
-String _ColorValue;
+String _ColorName;
 Color myChoiceColor = null; // 유저가 선택한 컬러
 int _ChoiceNumber = null; // db로 넘어가는 헥사코드 컬러값
 
@@ -74,13 +74,9 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
         Scaffold(
           appBar: AppBar(
             title: Text(
-              widget.fromLook == true ? '코디 등록' : '아이템 등록',
-              style: TextStyle(color: Colors.black),
+              widget.fromLook == true ? 'Upload Look' : 'Upload Item',
             ),
-            backgroundColor: Colors.white,
-            elevation: 0,
           ),
-          backgroundColor: Colors.white,
           body: ListView(
             children: [
               Padding(
@@ -230,6 +226,15 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
                               ),
                               TextField(
                                 controller: postTitleController,
+                                decoration: InputDecoration(
+                                  hintText: '제목을 입력해 주세요',
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                                maxLines: null,
                               ),
 
                               /// 설명
@@ -246,6 +251,15 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
                               ),
                               TextField(
                                 controller: postDescriptionController,
+                                decoration: InputDecoration(
+                                  hintText: '메모를 입력해 주세요',
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                                maxLines: null,
                               ),
                             ],
                           )
@@ -386,8 +400,8 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
                           child: RaisedButton(
                             onPressed: () {
                               widget.fromLook == true
-                                  ? controlUploadAndSave()
-                                  : controlUploadAndSave();
+                                  ? controlUploadLookAndSave()
+                                  : controlUploadItemAndSave();
                               Get.snackbar('나의 코디', '등록을 완료하였습니다.',
                                   snackPosition: SnackPosition.TOP);
                               print('update post');
@@ -418,7 +432,7 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
               child: Padding(
                 padding: EdgeInsets.all(10.0),
                 child: CircularProgressIndicator(
-                  strokeWidth: 10,
+                  strokeWidth: 3,
                   valueColor: AlwaysStoppedAnimation(Colors.black),
                   backgroundColor: Colors.grey,
                 ),
@@ -428,27 +442,10 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
     );
   }
 
-  savePostInfoToFireStore({
+  savePostFireStore({
     String url,
     String postTitle,
   }) {
-    postsRef.doc(postId).set({
-      'postId': postId,
-      'postImageURL': url,
-      'postTitle': postTitle,
-      'postDescription': postDescriptionController.text,
-      'timestamp': Timestamp.now(),
-      'userInfo': {
-        'uId': authController.firebaseUser.uid,
-        'userPhotoURL': authController.firebaseUser.photoURL,
-        'username': userController.user.value.username,
-      },
-      'counts': {
-        'likesCount': 0,
-        'commentsCount': 0,
-      },
-      'category': myItemsList[selectItemIndex]
-    });
     usersRef
         .doc(authController.firebaseUser.uid)
         .collection('dailyLooks')
@@ -462,14 +459,14 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       'userInfo': {
         'uId': authController.firebaseUser.uid,
         'userPhotoURL': authController.firebaseUser.photoURL,
-        'username': userController.user.value.username,
+        'username': userController.usermodel.value.uNickName,
       },
-      'counts': {
-        'likesCount': 0,
-        'commentsCount': 0,
-      },
-      'category': myItemsList[selectItemIndex]
+      'countLike': 0,
+      'countComment': 0,
+      'color': _ColorName,
+      'color0xFF': _ChoiceNumber
     });
+    print('add look');
   }
 
   saveItemInfoToFireStore({
@@ -489,13 +486,13 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       'userInfo': {
         'uId': authController.firebaseUser.uid,
         'userPhotoURL': authController.firebaseUser.photoURL,
-        'username': userController.user.value.username,
+        'username': userController.usermodel.value.uNickName,
       },
-      'counts': {
-        'likesCount': 0,
-        'commentsCount': 0,
-      },
-      'category': myItemsList[selectItemIndex]
+      'countLike': 0,
+      'countComment': 0,
+      'category': myItemsList[selectItemIndex],
+      'color': _ColorName,
+      'color0xFF': _ChoiceNumber
     });
   }
 
@@ -566,31 +563,45 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
     });
   }
 
-  controlUploadAndSave() async {
+  controlUploadLookAndSave() async {
+    await compressingPhoto();
+    String downloadUrl = await uploadPhoto(imgFile);
+
+    savePostFireStore(
+      url: downloadUrl,
+      postTitle: postTitleController.text,
+    );
+    usersRef.doc(authController.firebaseUser.uid).update({
+      'postCount': FieldValue.increment(1),
+      'lastUpdateDailyLook': Timestamp.now(),
+    });
+
+    updateDateTime();
+    clearPostInfo();
+  }
+
+  controlUploadItemAndSave() async {
     await compressingPhoto(); // 업로드 전 사진 준비
     String downloadUrl = await uploadPhoto(imgFile);
     // 업로드 후 url 저장
-    widget.fromLook == true
-        ? savePostInfoToFireStore(
-            url: downloadUrl,
-            postTitle: postTitleController.text,
-          )
-        : saveItemInfoToFireStore(url: downloadUrl);
-    widget.fromLook == true
-        ? usersRef.doc(authController.firebaseUser.uid).update({
-            'postCount': FieldValue.increment(1),
-            'lastUpdateDailyLook': Timestamp.now(),
-          })
-        : usersRef
-            .doc(authController.firebaseUser.uid)
-            .collection('items')
-            .doc(myItemsList[selectItemIndex])
-            .update({'count': FieldValue.increment(1)});
+    saveItemInfoToFireStore(url: downloadUrl);
+    usersRef
+        .doc(authController.firebaseUser.uid)
+        .collection('items')
+        .doc(myItemsList[selectItemIndex])
+        .update({'count': FieldValue.increment(1)});
+
+    ///
+    updateDateTime();
+    clearPostInfo();
+  }
+
+  updateDateTime() async {
     //TODO 시간 없데이트는 아직
     DocumentSnapshot documentSnapshot = await usersRef
         .doc(authController.firebaseUser.uid)
         .collection('colors')
-        .doc(_ColorValue)
+        .doc(_ColorName)
         .get();
 
     /// 만약 기존 값이 없다면 doc을 새로 생성후 값을 추가
@@ -598,11 +609,11 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       usersRef
           .doc(authController.firebaseUser.uid)
           .collection('colors')
-          .doc(_ColorValue)
+          .doc(_ColorName)
           .set(
         {
           'count': FieldValue.increment(1),
-          'name': _ColorValue,
+          'name': _ColorName,
           'color': _ChoiceNumber,
         },
       );
@@ -612,21 +623,20 @@ class _UploadMyLookScreenState extends State<UploadMyLookScreen> {
       usersRef
           .doc(authController.firebaseUser.uid)
           .collection('colors')
-          .doc(_ColorValue)
+          .doc(_ColorName)
           .update({'count': FieldValue.increment(1)});
     }
-    clearPostInfo();
   }
 
   GestureDetector changeColorValue(
       {String value, int number, Color choiceColor}) {
     return GestureDetector(
       onTap: () => setState(() {
-        _ColorValue = value;
+        _ColorName = value;
         // _servicePlaceOpacity = 1.0;
         myChoiceColor = choiceColor;
         _ChoiceNumber = number;
-        print(_ColorValue);
+        print(_ColorName);
       }),
       child: Container(
         alignment: Alignment.center,

@@ -30,23 +30,14 @@ class ScreenController extends GetxService {
 }
 
 //TODO 코디 고민, 구매 고민 등 메뉴를 초기에 불러와서 저장하는 모델값을 만들자
-class MenuList {
-  String title;
-  MenuList({
-    @required String title,
-  }) : this.title = title;
-}
 
 class MenuListController extends GetxController {
-  var menuList = new MenuList(
-    title: '',
-  ).obs;
+  static MenuListController get to => Get.put(MenuListController());
+  final currentIndex = 0.obs;
+  final menuList = ['코디고민', '구매 고민'].obs;
 
-  change({
-    @required String title,
-  }) {
-    menuList.update((val) {
-      val.title = title;
-    });
+  void changeMenuListIndex(int index) {
+    menuList[index];
+    print(currentIndex);
   }
 }

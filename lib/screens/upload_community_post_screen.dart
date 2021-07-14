@@ -9,6 +9,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 // for upload
 import 'package:uuid/uuid.dart';
@@ -24,6 +25,8 @@ class UploadCommunityPostScreen extends StatefulWidget {
 }
 
 class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
+  // text i
+  var i = 1;
   // 제목, 메모 컨트롤
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postDescriptionController = TextEditingController();
@@ -82,6 +85,17 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    RaisedButton(
+                      onPressed: () {
+                        showCupertinoModalBottomSheet(
+                          expand: false,
+                          context: context,
+                          builder: (context) => UploadCommunityPostScreen(),
+                        );
+                      },
+                      child: Text('aa'),
+                    ),
+
                     /// 이미지 선택 영역
                     if (imgFile == null)
                       GestureDetector(
@@ -222,13 +236,13 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
                         TextField(
                           controller: postTitleController,
                           decoration: InputDecoration(
-                            hintText: '제목을 입력해 주세요 ',
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
+                              hintText: '제목을 입력해 주세요 ',
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              labelText: '${i}'),
                           maxLines: null,
                         ),
                       ],
@@ -278,6 +292,7 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
                               controlUploadAndSave();
                               Get.snackbar('커뮤니티', '게시물 등록을 완료하였습니다.',
                                   snackPosition: SnackPosition.TOP);
+                              i++;
                               print('update post');
                             },
                             child: Text(
@@ -328,12 +343,10 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
       'userInfo': {
         'uId': authController.firebaseUser.uid,
         'PhotoURL': authController.firebaseUser.photoURL,
-        'username': userController.user.value.username,
+        'username': userController.fbuser[0]['uNickName'],
       },
-      'counts': {
-        'likesCount': 0,
-        'commentsCount': 0,
-      },
+      'countLike': 0,
+      'countComment': 0,
       'likes': {}
     });
     usersRef
@@ -350,12 +363,10 @@ class _UploadCommunityPostScreenState extends State<UploadCommunityPostScreen> {
       'userInfo': {
         'uId': authController.firebaseUser.uid,
         'PhotoURL': authController.firebaseUser.photoURL,
-        'username': userController.user.value.username,
+        'username': userController.fbuser[0]['uNickName'],
       },
-      'counts': {
-        'likesCount': 0,
-        'commentsCount': 0,
-      },
+      'countLike': 0,
+      'countComment': 0,
       'likes': {}
     });
   }

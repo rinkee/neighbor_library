@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 //
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:get/get.dart';
+import 'package:neighbor_library/screens/bb.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:neighbor_library/services/controller/auth_controller.dart';
+import 'package:neighbor_library/services/controller/user_controller.dart';
 
 class AddBottomSheet extends StatelessWidget {
   @override
@@ -47,9 +51,15 @@ class AddBottomSheet extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
+              Get.to(bb());
+            },
+            child: Text('gotobb'),
+          ),
+          InkWell(
+            onTap: () {
               print('아이템 등록');
-              showBarModalBottomSheet(
-                expand: true,
+              showCupertinoModalBottomSheet(
+                expand: false,
                 context: context,
                 builder: (context) => UploadMyLookScreen(
                   fromLook: false,

@@ -21,22 +21,10 @@ class HomeScreen extends StatelessWidget {
         title: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: Text(
-            'Facode',
-            // style: TextStyle(
-            //     color: Colors.black,
-            //     fontWeight: FontWeight.bold,
-            //     fontSize: 25),
-            style: GoogleFonts.montserrat(
-                fontSize: kMenuFontSize,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-                color: Colors.black),
+            'F-',
           ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
       ),
-      backgroundColor: Colors.white,
       body: ListView(
         children: [
           StreamBuilder<DocumentSnapshot>(
@@ -58,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 6월의 룩
+                        /// 6월의 룩
                         Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                                   //   fontSize: Get.width / 14,
                                   //   fontWeight: FontWeight.bold,
                                   style: GoogleFonts.montserrat(
-                                    fontSize: 25,
+                                    fontSize: kMenuFontSize,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic,
                                   ),
@@ -113,9 +101,15 @@ class HomeScreen extends StatelessWidget {
                                                         'postTitle':
                                                             postSDD[index]
                                                                 ['postTitle'],
+                                                        'postDescription': postSDD[
+                                                                index]
+                                                            ['postDescription'],
                                                         'postImageURL': postSDD[
                                                                 index]
                                                             ['postImageURL'],
+                                                        'color0xFF':
+                                                            postSDD[index]
+                                                                ['color0xFF'],
                                                       });
                                                 },
                                                 child: Container(
@@ -248,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
 
-                        /// 아이템
+                        // /// 아이템
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 30),
                           child: Column(
@@ -277,8 +271,7 @@ class HomeScreen extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () {
                                         Get.to(ItemScreen());
-                                        print(snapshot
-                                            .data['lastUpdateDailyLook']);
+                                        print(snapshot.data['lastUploadLook']);
                                       },
                                       child: Text('more'),
                                     ),
@@ -314,7 +307,7 @@ class HomeScreen extends StatelessWidget {
                                                     right: 7, left: 24)
                                                 : EdgeInsets.only(
                                                     right: 7, left: 7),
-                                            child: GestureDetector(
+                                            child: InkWell(
                                               onTap: () {
                                                 Get.to(
                                                   UserGetItemsScreen(),
@@ -402,7 +395,7 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.grey[100],
                           ),
                         ),
-                        // 최근기록
+                        // // 최근기록
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 24, vertical: 30),
@@ -444,12 +437,12 @@ class HomeScreen extends StatelessWidget {
                                                                           .seconds -
                                                                       snapshot
                                                                           .data[
-                                                                              'lastUpdateDailyLook']
+                                                                              'lastUploadLook']
                                                                           .seconds)
                                                               .inDays ==
                                                           0
                                                       ? '오늘'
-                                                      : '${Duration(seconds: Timestamp.now().seconds - snapshot.data['lastUpdateDailyLook'].seconds).inDays.toString()}일전',
+                                                      : '${Duration(seconds: Timestamp.now().seconds - snapshot.data['lastUploadLook'].seconds).inDays.toString()}일전',
                                                   style:
                                                       kDefaultCurrentRecordDateTextStyle),
                                             ],
@@ -476,7 +469,7 @@ class HomeScreen extends StatelessWidget {
                                                   style:
                                                       kDefaultCurrentRecordTextStyle),
                                               Text(
-                                                  '${Duration(seconds: Timestamp.now().seconds - snapshot.data['lastUpdateBuyCloth'].seconds + daySeconds).inDays.toString()}일전',
+                                                  '${Duration(seconds: Timestamp.now().seconds - snapshot.data['lastUploadBuy'].seconds + daySeconds).inDays.toString()}일전',
                                                   style:
                                                       kDefaultCurrentRecordDateTextStyle),
                                             ],
@@ -566,7 +559,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              snapshot.data['hasColor'] == true
+                              snapshot.data['haveColor'] == true
                                   ? Container(
                                       height: Get.height / 5,
                                       margin: EdgeInsets.only(top: 24),
@@ -585,10 +578,11 @@ class HomeScreen extends StatelessWidget {
                                                 ConnectionState.waiting) {
                                               return circularProgress();
                                             }
-
+//tag 분류 광주정보문화산업진흥원
                                             return ListView.builder(
                                               scrollDirection: Axis.horizontal,
-                                              itemCount: 5,
+                                              itemCount:
+                                                  snapshot.data.docs.length,
                                               itemBuilder: (context, index) =>
                                                   GestureDetector(
                                                 child: Padding(
@@ -663,13 +657,13 @@ class HomeScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 10.0,
-                          child: new Container(
-                            height: 10.0,
-                            color: Colors.grey[100],
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 10.0,
+                        //   child: new Container(
+                        //     height: 10.0,
+                        //     color: Colors.grey[100],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

@@ -10,6 +10,7 @@ import 'package:neighbor_library/screens/active_screen.dart';
 import 'package:neighbor_library/screens/detail_post_screen.dart';
 import 'package:neighbor_library/screens/sample.dart';
 import 'package:neighbor_library/screens/upload_community_post_screen.dart';
+import 'package:neighbor_library/services/controller/screen_controller.dart';
 import 'package:neighbor_library/services/controller/user_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
@@ -56,40 +57,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   usersRef // DB의 값도 바꿔주
                       .doc(authController.firebaseUser.uid)
                       .update({'isSeemed': false});
-                  userController.change(
-                      id: authController.firebaseUser.uid,
-                      username: userController.user.value.username,
-                      photoURL: userController.user.value.photoURL,
-                      isSeemed: false);
-
-                  // isSeemed 이름을 바꾸자
-                  print(userController.user.value.isSeemed);
                 },
                 color: Colors.black,
               ),
               Positioned(
                   right: 10,
                   top: 15,
-                  child: Container(
-                    width: 7,
-                    height: 7,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                  )),
+                  child: Obx(() => Container(
+                        width: 7,
+                        height: 7,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100))),
+                      ))),
             ],
           ),
-          IconButton(
-            icon: Icon(Feather.edit_2),
-            onPressed: () {
-              showBarModalBottomSheet(
-                expand: true,
-                context: context,
-                builder: (context) => UploadCommunityPostScreen(),
-              );
-            },
-            color: Colors.black,
-          )
         ],
       ),
       backgroundColor: Colors.white,
@@ -101,13 +84,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
             height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: menuList.length,
+              itemCount: menuListController.menuList.length,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
                   // 선택한 컬렉션으로 바꿈
-                  setState(() {
-                    choiceCategory = menuList[index];
-                  });
+                  menuListController.currentIndex.value = index;
                 },
                 child: Container(
                   padding: index == 0
@@ -119,38 +100,26 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(6),
                         ),
-                        color: menuList[index] == choiceCategory
+                        color: index == menuListController.currentIndex.value
                             ? Colors.blueAccent
                             : Colors.grey[200]),
                     child: Center(
                         child: Text(
-                      menuList[index],
+                      menuListController.menuList[index],
                       style: TextStyle(
-                          color: menuList[index] == choiceCategory
+                          color: index == menuListController.currentIndex.value
                               ? Colors.white
                               : Colors.black,
-                          fontWeight: menuList[index] == choiceCategory
-                              ? FontWeight.bold
-                              : null),
+                          fontWeight:
+                              index == menuListController.currentIndex.value
+                                  ? FontWeight.bold
+                                  : null),
                     )),
                   ),
                 ),
               ),
             ),
           ),
-          GetX<UserController>(builder: (controller) {
-            return Column(
-              children: [
-                Text(
-                  'isSeemed : ${controller.user.value.isSeemed}',
-                  style: TextStyle(color: Colors.black),
-                ),
-
-                //
-              ],
-            );
-          }),
-
           Expanded(
             //로 크기를 줘야 에러가 Column안에 있더라도 에러가 안뜸
             child: ListView(
@@ -168,10 +137,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   },
 
                   /// 포스트 리스트
-                  child: Container(
-                    child: FutureBuilder<QuerySnapshot>(
+                  child: Container(child: Obx(() {
+                    return FutureBuilder<QuerySnapshot>(
                         future: communityRef
-                            .where('category', isEqualTo: choiceCategory)
+                            .where('category',
+                                isEqualTo: menuListController.menuList[
+                                    menuListController.currentIndex.value])
+                            .orderBy('timestamp', descending: true)
                             .get(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -196,10 +168,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       PostSN[index]['userInfo']['username'];
                                   var timestamp = formatter.format(
                                       PostSN[index]['timestamp'].toDate());
-                                  var likesCount =
-                                      PostSN[index]['counts']['likesCount'];
+                                  var likesCount = PostSN[index]['countLike'];
                                   var commentsCount =
-                                      PostSN[index]['counts']['commentsCount'];
+                                      PostSN[index]['countComment'];
                                   bool isLiked = PostSN[index]['likes']
                                           [authController.firebaseUser.uid] ==
                                       authController.firebaseUser.uid;
@@ -207,6 +178,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       "/DetailPostScreen?postId=${postId}&postTitle=${postTitle}&uId=${uId}&username=${username}&postDescription=${PostSN[index]['postDescription']}&timestamp=${timestamp}&commentsCount=${commentsCount}&likesCount=${likesCount}&isLiked=${isLiked}");
                                   setState(() {
                                     isLiked = value;
+                                    print(isLiked);
                                   });
                                 },
                                 child: Container(
@@ -244,8 +216,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                   ),
                                                   SizedBox(width: 5),
                                                   Text(
-                                                    PostSN[index]['counts']
-                                                            ['likesCount']
+                                                    PostSN[index]['countLike']
                                                         .toString(),
                                                     style: TextStyle(
                                                         color:
@@ -264,8 +235,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                   ),
                                                   SizedBox(width: 5),
                                                   Text(
-                                                    PostSN[index]['counts']
-                                                            ['commentsCount']
+                                                    PostSN[index]
+                                                            ['countComment']
                                                         .toString(),
                                                     style: TextStyle(
                                                         color:
@@ -286,8 +257,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                               ),
                             ),
                           );
-                        }),
-                  ),
+                        });
+                  })),
                 )
                 // Padding(
                 //   padding: const EdgeInsets.only(left: 0),

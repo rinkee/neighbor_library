@@ -25,7 +25,6 @@ class ActiveScreen extends StatelessWidget {
           icon: Icon(Feather.chevron_left),
           onPressed: () {
             Get.back();
-            // userController.haveNoti.value = false;
           },
           color: Colors.black,
         ),
@@ -97,17 +96,18 @@ class ActiveScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.grey),
                             ),
                             SizedBox(
-                              height: 3,
+                              height: 7,
                             ),
                             Text(
-                              CommentSN[index]['userInfo']['username'],
+                              CommentSN[index]['userInfo']['uNickName'],
                               style: TextStyle(color: Colors.blueAccent),
                             ),
+                            SizedBox(height: 3),
                             Flexible(
                               child: Text(
                                 CommentSN[index]['comment'],
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.black),
+                                    fontSize: 20, color: Colors.black),
                               ),
                             ),
                             SizedBox(

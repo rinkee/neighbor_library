@@ -10,7 +10,9 @@
         android:label="neighbor_library"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity">
+        <intent-filter> <action android:name="FLUTTER_NOTIFICATION_CLICK" /> <category android:name="android.intent.category.DEFAULT" /> </intent-filter>
+<!--       위에는 FCM 안드로이드 디바이스에 푸시 알림이 도착했을때 사용자가 알림 UI를 눌러 앱을 실행시 푸시 알림에 포함된 데이터를 정상적으로 앱에서 잔달박기 위해.-->
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

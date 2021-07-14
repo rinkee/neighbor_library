@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:neighbor_library/screens/aa.dart';
 import 'package:neighbor_library/screens/community_screen.dart';
 import 'package:neighbor_library/screens/sample.dart';
+import 'package:neighbor_library/services/controller/post_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 import 'package:neighbor_library/widgets/progress_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -25,9 +26,16 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final PC = Get.put(PostController());
   String postId = Uuid().v4();
   final ImagePicker _picker = ImagePicker();
   File imgFile;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +94,7 @@ class _UserScreenState extends State<UserScreen> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: imgFile == null
-                                    ? NetworkImage(snapshot.data['photoURL'])
+                                    ? NetworkImage(snapshot.data['uPhotoURL'])
                                     : FileImage(imgFile)),
                           ),
                         )),
@@ -115,21 +123,28 @@ class _UserScreenState extends State<UserScreen> {
                     //     ),
                     //   ),
                     // ),
+                    // Obx(() => Text('${PC.lookPostList[0]['postId']}')),
                     RaisedButton(
                       onPressed: () {
-                        Get.to(aa());
+                        Get.to(CommunityScreen());
+                      },
+                      child: Text('CommunityScreen'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        print(userController.fbuser);
                       },
                       child: Text('aa'),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      snapshot.data['username'],
+                      snapshot.data['uNickName'],
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
                     Text(
-                      snapshot.data['email'],
+                      snapshot.data['uEmail'],
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -163,7 +178,8 @@ class _UserScreenState extends State<UserScreen> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 5),
                         child: Container(
                           width: Get.width,
                           height: 70,
@@ -184,6 +200,39 @@ class _UserScreenState extends State<UserScreen> {
                               SizedBox(width: 20),
                               Text(
                                 '로그아웃',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 5),
+                        child: Container(
+                          width: Get.width,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.grey),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 20),
+                              Icon(
+                                Icons.logout,
+                                size: 35,
+                              ),
+                              SizedBox(width: 20),
+                              Text(
+                                '다크모드',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               )

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:neighbor_library/utilities/constants.dart';
+import 'package:neighbor_library/models/user_model.dart';
 import 'dart:async';
 
 class MyUser {
@@ -21,25 +22,14 @@ class MyUser {
 }
 
 class UserController extends GetxController {
-  var user = new MyUser(
-    id: '',
-    username: '',
-    photoURL: '',
-    isSeemed: false,
-  ).obs;
+  var fbuser = [].obs;
 
-  change({
-    String id,
-    String username,
-    String photoURL,
-    @required bool isSeemed,
-  }) {
-    user.update((val) {
-      val.id = id;
-      val.username = username;
-      val.photoURL = photoURL;
-      val.isSeemed = isSeemed;
-    });
+  Rx<UserModel> usermodel = UserModel().obs;
+
+  @override
+  onReady() {
+    super.onReady();
+    usermodel.bindStream(listenToUser());
   }
 
   // StreamController<bool> streamController = StreamController<bool>();
@@ -57,5 +47,29 @@ class UserController extends GetxController {
   // @override
   // FutureOr onClose() {
   //   streamController.close();
+  // }
+
+// 패치해서 한곳에 저장
+  void fetchUser(String currentuId) async {
+    await usersRef.doc(currentuId).get().then((value) {
+      fbuser.add(UserModel.fromJson(value.data()).toJson());
+      print(fbuser);
+    });
+  }
+
+  void fetchUser1(String currentuId) async {
+    await usersRef.doc(currentuId).get().then((value) {
+      fbuser.add(UserModel.fromJson(value.data()).toJson());
+      print(fbuser);
+    });
+  }
+
+  Stream<UserModel> listenToUser() => usersRef
+      .doc(authController.firebaseUser.uid)
+      .snapshots()
+      .map((snapshot) => UserModel.fromSnapshot(snapshot));
+
+  // void clearUser() {
+  //   fbuser.clear();
   // }
 }

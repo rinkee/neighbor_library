@@ -18,8 +18,7 @@ class _MyLookScreenState extends State<MyLookScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '나의 코디',
-          style: TextStyle(color: Colors.black),
+          'My Look',
         ),
         actions: [
           Padding(
@@ -54,6 +53,9 @@ class _MyLookScreenState extends State<MyLookScreen> {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return circularProgress();
+            }
+            if (!snapshot.hasData) {
+              return Text('no data');
             }
 
             return Padding(

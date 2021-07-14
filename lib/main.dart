@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neighbor_library/app.dart';
 import 'package:neighbor_library/screens/detail_post_screen.dart';
 import 'package:neighbor_library/screens/home_screen.dart';
+import 'package:neighbor_library/services/controller/user_controller.dart';
 import 'package:neighbor_library/utilities/constants.dart';
 // binding
 import 'binding/instance_binding.dart';
@@ -33,6 +34,24 @@ void main() async {
     initialBinding: InstanceBinding(),
     theme: ThemeData(
         textTheme: GoogleFonts.notoSansTextTheme(),
+        scaffoldBackgroundColor: Colors.white,
+        primaryTextTheme: TextTheme(
+          // scaffold app bar text
+          title: GoogleFonts.montserrat(
+            fontSize: kAppBarTitleFontSize,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+            color: Colors.white,
+            titleTextStyle: TextStyle(color: Colors.black),
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black)),
+        backgroundColor: Colors.white,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Colors.white, elevation: 0),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

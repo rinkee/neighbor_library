@@ -189,22 +189,27 @@ saveUserInfoToFirestore() async {
     usersRef
         .doc(user.uid)
         .set({
-          'gender': gender,
-          'email': user.email,
-          // 'followerCount': 0,
-          'hasItem': false,
-          'hasColor': false,
           'uId': user.uid,
+          'uPhotoURL': user.photoURL,
+          'uProfileName': user.displayName,
+          'uNickName': nameController.text,
+          'uEmail': user.email,
+          'gender': gender,
           'postCount': 0,
-          'profileName': user.displayName,
-          'timestamp': Timestamp.now(),
-          'photoURL': user.photoURL,
-          'username': nameController.text,
-          'lastUpdateDailyLook': Timestamp.now(),
-          'lastUpdateBuyCloth': Timestamp.now(),
+          'haveItem': false,
+          'haveColor': false,
+          'haveNotification': false,
+          'createAccountDate': Timestamp.now(),
+          'lastUploadBuy': Timestamp.now(),
+          'lastUploadLook': Timestamp.now(),
         })
         .then((value) => print("User Add firestore"))
         .catchError((error) => print("Failed to add user: $error"));
+    userController.fbuser.clear();
+    userController.fetchUser(user.uid);
+    userController.fbuser.refresh();
+    print('add user info in FB && update userModelList !!');
+
     // cap
     usersRef
         .doc(user.uid)
@@ -212,7 +217,7 @@ saveUserInfoToFirestore() async {
         .doc('cap')
         .set({'count': 0, 'name': 'cap'})
         .then((value) => print("cap Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .catchError((error) => print("Failed to add cap: $error"));
     // glasses
     usersRef
         .doc(user.uid)
@@ -220,7 +225,7 @@ saveUserInfoToFirestore() async {
         .doc('glasses')
         .set({'count': 0, 'name': 'glasses'})
         .then((value) => print("glasses Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .catchError((error) => print("Failed to add glasses: $error"));
     // t-shirt
     usersRef
         .doc(user.uid)
@@ -228,15 +233,8 @@ saveUserInfoToFirestore() async {
         .doc('t-shirt')
         .set({'count': 0, 'name': 't-shirt'})
         .then((value) => print("t-shirt Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
-    // dress
-    usersRef
-        .doc(user.uid)
-        .collection('items')
-        .doc('dress')
-        .set({'count': 0, 'name': 'dress'})
-        .then((value) => print("dress Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .catchError((error) => print("Failed to add t-shirt: $error"));
+
     // jeans
     usersRef
         .doc(user.uid)
@@ -252,15 +250,8 @@ saveUserInfoToFirestore() async {
         .doc('shorts-pants')
         .set({'count': 0, 'name': 'shorts-pants'})
         .then((value) => print("shorts-pants Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
-    // skirt
-    usersRef
-        .doc(user.uid)
-        .collection('items')
-        .doc('skirt')
-        .set({'count': 0, 'name': 'skirt'})
-        .then((value) => print("skirt Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .catchError((error) => print("Failed to add shorts-pants: $error"));
+
     // shoes
     usersRef
         .doc(user.uid)
@@ -268,6 +259,25 @@ saveUserInfoToFirestore() async {
         .doc('shoes')
         .set({'count': 0, 'name': 'shoes'})
         .then((value) => print("shoes Add firestore"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .catchError((error) => print("Failed to add shoes: $error"));
+    if (gender == 1) {
+      // skirt
+      usersRef
+          .doc(user.uid)
+          .collection('items')
+          .doc('skirt')
+          .set({'count': 0, 'name': 'skirt'})
+          .then((value) => print("skirt Add firestore"))
+          .catchError((error) => print("Failed to add skirt: $error"));
+
+      // dress
+      usersRef
+          .doc(user.uid)
+          .collection('items')
+          .doc('dress')
+          .set({'count': 0, 'name': 'dress'})
+          .then((value) => print("dress Add firestore"))
+          .catchError((error) => print("Failed to add dress: $error"));
+    }
   }
 }

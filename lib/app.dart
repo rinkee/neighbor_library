@@ -6,6 +6,7 @@ import 'package:neighbor_library/screens/myModal.dart';
 import 'package:neighbor_library/screens/upload_my_look_screen.dart';
 import 'package:neighbor_library/screens/my_look_sreen.dart';
 import 'package:neighbor_library/screens/user_screen.dart';
+import 'package:neighbor_library/screens/user_screen2.dart';
 
 // screens
 import 'package:neighbor_library/services/controller/screen_controller.dart';
@@ -47,7 +48,7 @@ MyBottomNavigation() {
           return CommunityScreen2();
           break;
         case RouteName.UserScreen:
-          return UserScreen();
+          return UserScreen2();
           break;
         case RouteName.Add:
           // bottomSheet;
